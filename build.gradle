@@ -1,0 +1,127 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'com.bmuschko:gradle-docker-plugin:4.0.5'
+		classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
+	}
+}
+
+repositories {
+	maven { url "https://dl.bintray.com/micronaut/core-releases-local" }
+	jcenter()
+}
+
+apply plugin: 'idea'
+apply plugin: "net.ltgt.apt-idea"
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+group = 'nl.tabitsolutions'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	springBootAdminVersion = '2.1.1'
+}
+
+ext {
+	micronautVersion = "1.0.1"
+	micronautSpringVersion = "1.0.0.M1"
+}
+
+dependencies {
+	annotationProcessor "io.micronaut:micronaut-inject-java"
+	annotationProcessor "io.micronaut:micronaut-validation"
+	annotationProcessor "io.micronaut.configuration:micronaut-openapi"
+	annotationProcessor "io.micronaut.spring:micronaut-spring-boot-annotation:$micronautSpringVersion"
+	annotationProcessor "io.micronaut.spring:micronaut-spring-web-annotation:$micronautSpringVersion"
+
+	compile("io.micronaut:micronaut-inject")
+
+	compile("io.micronaut:micronaut-http-server")
+	compile("io.micronaut:micronaut-http-server-netty")
+
+	compile("io.micronaut:micronaut-views")
+	compile("io.micronaut.configuration:micronaut-hibernate-validator")
+	compile("io.micronaut.spring:micronaut-spring-web:$micronautSpringVersion")
+
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-aop')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('de.codecentric:spring-boot-admin-starter-client')
+	compile('de.codecentric:spring-boot-admin-starter-server')
+
+	runtimeOnly('org.springframework.boot:spring-boot-devtools')
+
+	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+	compileOnly('org.projectlombok:lombok')
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile("io.micronaut:micronaut-http-client")
+	testCompile("io.micronaut.test:micronaut-test-junit5:1.0.0.RC2")
+	testCompile "io.micronaut:micronaut-inject-java"
+
+	testCompile("io.micronaut:micronaut-http-client")
+	testCompile("io.micronaut.test:micronaut-test-junit5:1.0.0.RC2")
+	testCompile "io.micronaut:micronaut-inject-java"
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+		mavenBom "io.micronaut:micronaut-bom:$micronautVersion"
+	}
+}
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+task copyFatJar(type: Copy, dependsOn: bootJar) {
+	from "$buildDir/libs"
+	into file("$project.buildDir/docker")
+}
+
+task createDockerfile(type: Dockerfile) {
+	from 'openjdk:11-jdk'
+	runCommand 'apt-get update'
+	runCommand 'apt-get install curl'
+	runCommand 'adduser --disabled-password -shell /bin/sh javauser'
+	workingDir '/home/javauser'
+	user 'javauser'
+	copyFile "heatermeter-${project.version}.jar", '/home/javauser/heatermeter.jar'
+	entryPoint 'java'
+	defaultCommand '-jar', 'heatermeter.jar'
+	exposePort 8080
+
+	instruction 'HEALTHCHECK CMD curl -f http://localhost:8080/health || exit 1'
+}
+
+task buildImage(type: DockerBuildImage) {
+	inputDir = file("$project.buildDir/docker")
+	tag = 'jochemvv/heatermeter:latest'
+}
+buildImage.dependsOn createDockerfile
+//build.dependsOn buildImage
+buildImage.dependsOn copyFatJar
+
+compileJava.options.compilerArgs += '-parameters'
+compileTestJava.options.compilerArgs += '-parameters'
+//
+//bootRun.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
+
+idea.module.scopes.PROVIDED.plus += [configurations.annotationProcessor]
+idea.module.scopes.TEST.plus += [configurations.testAnnotationProcessor]
