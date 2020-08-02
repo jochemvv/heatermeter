@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.0.RELEASE'
+		springBootVersion = '2.3.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -8,8 +8,8 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath 'com.bmuschko:gradle-docker-plugin:4.0.5'
-		classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
+//		classpath 'com.bmuschko:gradle-docker-plugin:4.0.5'
+//		classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
 	}
 }
 
@@ -19,16 +19,16 @@ repositories {
 }
 
 apply plugin: 'idea'
-apply plugin: "net.ltgt.apt-idea"
+//apply plugin: "net.ltgt.apt-idea"
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.bmuschko.docker-remote-api'
+//apply plugin: 'com.bmuschko.docker-remote-api'
 
 group = 'nl.tabitsolutions'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 8
+targetCompatibility = 8
 
 repositories {
 	mavenCentral()
@@ -68,6 +68,10 @@ dependencies {
 
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 
+	compile('com.pi4j:pi4j-parent:1.2')
+	compile('com.pi4j:pi4j-core:1.2')
+	compile('com.pi4j:pi4j-device:1.2')
+
 	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 	compileOnly('org.projectlombok:lombok')
 
@@ -88,40 +92,40 @@ dependencyManagement {
 	}
 }
 
-import com.bmuschko.gradle.docker.tasks.image.*
+//import com.bmuschko.gradle.docker.tasks.image.*
 
-task copyFatJar(type: Copy, dependsOn: bootJar) {
-	from "$buildDir/libs"
-	into file("$project.buildDir/docker")
-}
+//task copyFatJar(type: Copy, dependsOn: bootJar) {
+//	from "$buildDir/libs"
+//	into file("$project.buildDir/docker")
+//}
+//
+//task createDockerfile(type: Dockerfile) {
+//	from 'openjdk:11-jdk'
+//	runCommand 'apt-get update'
+//	runCommand 'apt-get install curl'
+//	runCommand 'adduser --disabled-password -shell /bin/sh javauser'
+//	workingDir '/home/javauser'
+//	user 'javauser'
+//	copyFile "heatermeter-${project.version}.jar", '/home/javauser/heatermeter.jar'
+//	entryPoint 'java'
+//	defaultCommand '-jar', 'heatermeter.jar'
+//	exposePort 8080
+//
+//	instruction 'HEALTHCHECK CMD curl -f http://localhost:8080/health || exit 1'
+//}
 
-task createDockerfile(type: Dockerfile) {
-	from 'openjdk:11-jdk'
-	runCommand 'apt-get update'
-	runCommand 'apt-get install curl'
-	runCommand 'adduser --disabled-password -shell /bin/sh javauser'
-	workingDir '/home/javauser'
-	user 'javauser'
-	copyFile "heatermeter-${project.version}.jar", '/home/javauser/heatermeter.jar'
-	entryPoint 'java'
-	defaultCommand '-jar', 'heatermeter.jar'
-	exposePort 8080
-
-	instruction 'HEALTHCHECK CMD curl -f http://localhost:8080/health || exit 1'
-}
-
-task buildImage(type: DockerBuildImage) {
-	inputDir = file("$project.buildDir/docker")
-	tag = 'jochemvv/heatermeter:latest'
-}
-buildImage.dependsOn createDockerfile
+//task buildImage(type: DockerBuildImage) {
+//	inputDir = file("$project.buildDir/docker")
+//	tag = 'jochemvv/heatermeter:latest'
+//}
+//buildImage.dependsOn createDockerfile
 //build.dependsOn buildImage
-buildImage.dependsOn copyFatJar
+//buildImage.dependsOn copyFatJar
 
 compileJava.options.compilerArgs += '-parameters'
 compileTestJava.options.compilerArgs += '-parameters'
 //
 //bootRun.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-idea.module.scopes.PROVIDED.plus += [configurations.annotationProcessor]
-idea.module.scopes.TEST.plus += [configurations.testAnnotationProcessor]
+//idea.module.scopes.PROVIDED.plus += [configurations.annotationProcessor]
+//idea.module.scopes.TEST.plus += [configurations.testAnnotationProcessor]

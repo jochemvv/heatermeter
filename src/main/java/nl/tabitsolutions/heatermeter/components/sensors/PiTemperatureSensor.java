@@ -1,0 +1,43 @@
+package nl.tabitsolutions.heatermeter.components.sensors;
+
+import nl.tabitsolutions.heatermeter.model.Sensor;
+import nl.tabitsolutions.heatermeter.model.SensorValue;
+
+import com.pi4j.io.i2c.I2CDevice;
+
+public class PiTemperatureSensor extends Sensor<Long> {
+
+    private final I2CDevice i2cDevice;
+    private final byte[] config;
+
+    public PiTemperatureSensor(String identifier, I2CDevice i2cDevice, byte[] config) {
+        super(identifier);
+        this.i2cDevice = i2cDevice;
+        this.config = config;
+    }
+
+    @Override
+    public SensorValue<Long> getValue() {
+        synchronized (i2cDevice) {
+            try {
+                i2cDevice.write(0x01, config, 0, 2);
+                Thread.sleep(500);
+                byte[] data = new byte[2];
+                i2cDevice.read(0x00, data, 0, 2);
+                int rawReading = getRawReading(data);
+                return null;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private int getRawReading(byte[] data) {
+        int rawReading = ((data[0] & 0xFF) * 256) + (data[1] & 0xFF);
+        if (rawReading > 32767)
+        {
+            rawReading -= 65535;
+        }
+        return rawReading;
+    }
+}
