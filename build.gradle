@@ -39,8 +39,8 @@ ext {
 }
 
 ext {
-	micronautVersion = "1.0.1"
-	micronautSpringVersion = "1.0.0.M1"
+	micronautVersion = "2.0.0"
+	micronautSpringVersion = "2.0.0"
 }
 
 dependencies {
@@ -50,30 +50,29 @@ dependencies {
 	annotationProcessor "io.micronaut.spring:micronaut-spring-boot-annotation:$micronautSpringVersion"
 	annotationProcessor "io.micronaut.spring:micronaut-spring-web-annotation:$micronautSpringVersion"
 
-	compile("io.micronaut:micronaut-inject")
+	implementation("io.micronaut:micronaut-inject")
 
-	compile("io.micronaut:micronaut-http-server")
-	compile("io.micronaut:micronaut-http-server-netty")
+	implementation("io.micronaut:micronaut-http-server")
+	implementation("io.micronaut:micronaut-http-server-netty")
 
-	compile("io.micronaut:micronaut-views")
-	compile("io.micronaut.configuration:micronaut-hibernate-validator")
-	compile("io.micronaut.spring:micronaut-spring-web:$micronautSpringVersion")
+	implementation("io.micronaut.spring:micronaut-spring-web:$micronautSpringVersion")
+	implementation("io.micronaut.views:micronaut-views-thymeleaf")
 
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-aop')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('de.codecentric:spring-boot-admin-starter-client')
-	compile('de.codecentric:spring-boot-admin-starter-server')
+	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	implementation('org.springframework.boot:spring-boot-starter-aop')
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('de.codecentric:spring-boot-admin-starter-client')
+	implementation('de.codecentric:spring-boot-admin-starter-server')
 
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 
-	compile('com.pi4j:pi4j-parent:1.2')
-	compile('com.pi4j:pi4j-core:1.2')
-	compile('com.pi4j:pi4j-device:1.2')
+	implementation('com.pi4j:pi4j-parent:1.2')
+	implementation('com.pi4j:pi4j-core:1.2')
+	implementation('com.pi4j:pi4j-device:1.2')
 
-	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
-	compileOnly('org.projectlombok:lombok')
+	implementation('org.springframework.boot:spring-boot-configuration-processor')
+	implementation('org.projectlombok:lombok')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile("io.micronaut:micronaut-http-client")

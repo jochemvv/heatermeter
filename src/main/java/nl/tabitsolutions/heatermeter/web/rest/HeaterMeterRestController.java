@@ -1,4 +1,4 @@
-package nl.tabitsolutions.heatermeter.web;
+package nl.tabitsolutions.heatermeter.web.rest;
 
 import nl.tabitsolutions.heatermeter.components.sensors.SensorsService;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
