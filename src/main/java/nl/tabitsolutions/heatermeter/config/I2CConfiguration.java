@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import java.io.IOException;
 
 @Configuration
-@Profile("!dev-system")
+@Profile("gpio")
 public class I2CConfiguration {
 
     @Bean

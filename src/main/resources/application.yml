@@ -1,0 +1,6 @@
+logger:
+  levels:
+    io.micronaut: INFO
+    io.micronaut.http: DEBUG
+    org.thymeleaf: INFO
+    io.netty: INFO
