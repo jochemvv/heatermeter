@@ -3,6 +3,7 @@ package nl.tabitsolutions.heatermeter.components.sensors;
 import nl.tabitsolutions.heatermeter.model.Reading;
 import nl.tabitsolutions.heatermeter.model.Sensor;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -32,6 +33,7 @@ public class SensorsService {
         return sensor.getValue();
     }
 
+    @Scheduled(fixedDelay = 1000)
     public Map<String, SensorValue<?>> getCurrentReadings() {
         Map<String, SensorValue<?>> currentReadings = this.sensors.entrySet().stream()
                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getValue()));

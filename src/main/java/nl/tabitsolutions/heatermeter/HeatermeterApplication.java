@@ -6,9 +6,11 @@ import nl.tabitsolutions.heatermeter.config.TestConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @Import({I2CConfiguration.class, TestConfiguration.class})
+@EnableScheduling
 public class HeatermeterApplication {
 
 	public static void main(String[] args) {
