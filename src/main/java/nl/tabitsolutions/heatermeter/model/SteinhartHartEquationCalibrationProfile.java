@@ -74,6 +74,12 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     }
 
     public double adcValueToResistance(long adcValue) {
+        // adcVal = resistance / (resistance + serialResistor) * Vcc * 1023 / Varef
+        // adcVal = resistance / (resistance + this.R) * 3.3 * (Math.pow(2, 15) - 1) / 4.09
+        // adcVal = resistance / (resistance + this.R) * 26438
+        // accVAl = R / R + this.R
+
+//        return (this.R / ((26438d / adcValue) - 1d));
         return (this.R / (((Math.pow(2, 15) - 1) / adcValue) - 1d));
     }
 
