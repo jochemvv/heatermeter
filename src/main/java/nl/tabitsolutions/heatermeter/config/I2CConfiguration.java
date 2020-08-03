@@ -7,11 +7,12 @@ import nl.tabitsolutions.heatermeter.components.sensors.PiTemperatureSensor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
 
 @Configuration
-@ConditionalOnProperty(name = "heatermeater.pimode", havingValue = "true")
+@Profile("!local")
 public class I2CConfiguration {
 
     @Bean
