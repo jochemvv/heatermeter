@@ -38,7 +38,7 @@ public class PiTemperatureSensor extends Sensor<Long> {
                 long rawReading = getRawReading(data);
                 Long calibratedValue = steinhartHartEquationCalibrationProfile.getCalibratedValue(rawReading);
 
-                logger.info("raw {}, calibrated {}", rawReading, calibratedValue);
+                logger.info("{}, raw {}, calibrated {}", getIdentifier(), rawReading, calibratedValue);
 
                 return new SensorValue<>(calibratedValue, Unit.CELSIUS);
             } catch (Exception e) {
