@@ -31,8 +31,8 @@ public class PiTemperatureSensor extends Sensor<Long> {
     public SensorValue<Long> getValue() {
         synchronized (i2cDevice) {
             try {
-                i2cDevice.write(0x01, config, 0, 2);
-                Thread.sleep(500);
+//                i2cDevice.write(0x01, config, 0, 2);
+//                Thread.sleep(500);
                 byte[] data = new byte[2];
                 i2cDevice.read(0x00, data, 0, 2);
                 long rawReading = getRawReading(data);

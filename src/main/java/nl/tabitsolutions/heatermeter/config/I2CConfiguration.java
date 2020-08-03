@@ -27,7 +27,12 @@ public class I2CConfiguration {
 
     @Bean(name = "ikeaCalibration")
     public SteinhartHartEquationCalibrationProfile ikeaCalibration() {
-        return new SteinhartHartEquationCalibrationProfile(155000d, 52000d, 4300d, 174d, 298d, 364d, 100000d);
+        return new SteinhartHartEquationCalibrationProfile(142000d, 52000d, 4300d, 275d, 298d, 364d, 100000d);
+    }
+
+//    @Bean(name = "bluetoothCalibration")
+    public SteinhartHartEquationCalibrationProfile bluetoothCalibration() {
+        return new SteinhartHartEquationCalibrationProfile(785000d, 248000d, 22000d, 273d, 296d, 355d, 100000d);
     }
 
     @Bean(name = "channel0")

@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class SteinhartHartEquationCalibrationProfile implements CalibrationProfile<Long> {
 
-    private final double logCalibrationResistance1;
-    private final double logCalibrationResistance2;
-    private final double logCalibrationResistance3;
-
-    private final double inverseTemp1;
-    private final double inverseTemp2;
-    private final double inverseTemp3;
-
-    private final double gma2;
-    private final double gma3;
+//    private final double logCalibrationResistance1;
+//    private final double logCalibrationResistance2;
+//    private final double logCalibrationResistance3;
+//
+//    private final double inverseTemp1;
+//    private final double inverseTemp2;
+//    private final double inverseTemp3;
+//
+//    private final double gma2;
+//    private final double gma3;
 
     private final double A;
     private final double B;
@@ -28,20 +28,36 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
                                                    double temp2,
                                                    double temp3,
                                                    double seriesResistance) {
-        this.logCalibrationResistance1 = Math.log(calibrationResistance1);
-        this.logCalibrationResistance2 = Math.log(calibrationResistance2);
-        this.logCalibrationResistance3 = Math.log(calibrationResistance3);
+//        this.logCalibrationResistance1 = Math.log(calibrationResistance1);
+//        this.logCalibrationResistance2 = Math.log(calibrationResistance2);
+//        this.logCalibrationResistance3 = Math.log(calibrationResistance3);
+//
+//        this.inverseTemp1 = 1d / temp1;
+//        this.inverseTemp2 = 1d / temp2;
+//        this.inverseTemp3 = 1d / temp3;
+//
+//        this.gma2 = (this.inverseTemp2 - this.inverseTemp1) / (this.logCalibrationResistance2 - this.logCalibrationResistance1);
+//        this.gma3 = (this.inverseTemp3 - this.inverseTemp1) / (this.logCalibrationResistance3 - this.logCalibrationResistance1);
+//
+//        this.C = ((gma3 - gma2) / (this.logCalibrationResistance3 - this.logCalibrationResistance2)) * Math.pow((this.logCalibrationResistance1 + this.logCalibrationResistance2 + this.logCalibrationResistance3), -1);
+//        this.B = gma2 - C * (Math.pow(this.logCalibrationResistance1, 2) + this.logCalibrationResistance1 * this.logCalibrationResistance2 + Math.pow(this.logCalibrationResistance2, 2));
+//        this.A = this.inverseTemp1 - (B + Math.pow(this.logCalibrationResistance1, 2) * C) * this.logCalibrationResistance1;
 
-        this.inverseTemp1 = 1d / temp1;
-        this.inverseTemp2 = 1d / temp2;
-        this.inverseTemp3 = 1d / temp3;
+        double L1 = Math.log(calibrationResistance1);
+        double L2 = Math.log(calibrationResistance2);
+        double L3 = Math.log(calibrationResistance3);
+        double Y1 = 1 / temp1;
+        double Y2 = 1 / temp2;
+        double Y3 = 1 / temp3;
+        double gma2 = (Y2 - Y1) / (L2 - L1);
+        double gma3 = (Y3 - Y1) / (L3 - L1);
 
-        this.gma2 = (this.inverseTemp2 - this.inverseTemp1) / (this.logCalibrationResistance2 - this.logCalibrationResistance1);
-        this.gma3 = (this.inverseTemp3 - this.inverseTemp1) / (this.logCalibrationResistance3 - this.logCalibrationResistance1);
-
-        this.C = ((gma3 - gma2) / (this.logCalibrationResistance3 - this.logCalibrationResistance2)) * Math.pow((this.logCalibrationResistance1 + this.logCalibrationResistance2 + this.logCalibrationResistance3), -1);
-        this.B = gma2 - C * (Math.pow(this.logCalibrationResistance1, 2) + this.logCalibrationResistance1 * this.logCalibrationResistance2 + Math.pow(this.logCalibrationResistance2, 2));
-        this.A = this.inverseTemp1 - (B + Math.pow(this.logCalibrationResistance1, 2) * C) * this.logCalibrationResistance1;
+        // A, B, and C are doubleiables used in the Steinhart-Hart equation
+        // to determine temperature from resistance in a thermistor. These
+        // values will be set during the init() function.
+        this.C = ((gma3 - gma2) / (L3 - L2)) * Math.pow((L1 + L2 + L3), -1);
+        this.B = gma2 - C * (Math.pow(L1, 2) + L1 * L2 + Math.pow(L2, 2));
+        this.A = Y1 - (B + Math.pow(L1, 2) * C) * L1;
 
         this.R = seriesResistance;
     }
@@ -58,11 +74,10 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     }
 
     public double adcValueToResistance(long adcValue) {
-        return (this.R / (((32767d * 2) / adcValue) - 1d));
+        return (this.R / (((Math.pow(2, 15) - 1) / adcValue) - 1d));
     }
 
     public double kelvinToCelsius(double kelvin) {
-        double tempC = kelvin - 273.15;
-        return Math.round(tempC * 10d) / 10d;
+        return kelvin - 273.15;
     }
 }

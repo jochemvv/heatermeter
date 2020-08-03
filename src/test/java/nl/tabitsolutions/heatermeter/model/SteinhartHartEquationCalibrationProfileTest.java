@@ -1,6 +1,7 @@
 package nl.tabitsolutions.heatermeter.model;
 
 import io.micronaut.test.annotation.MicronautTest;
+import nl.tabitsolutions.heatermeter.config.I2CConfiguration;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,15 +12,17 @@ class SteinhartHartEquationCalibrationProfileTest {
 
 
     @Test
-    public void test() {
-        SteinhartHartEquationCalibrationProfile calibrationProfile = new SteinhartHartEquationCalibrationProfile(155000d,
-                52000d,
-                4300d,
-                174d,
-                298d,
-                364d,
-                100000d);
-        Long calibratedValue = calibrationProfile.getCalibratedValue(  18866L);
+    public void testIkeaProbe() {
+        SteinhartHartEquationCalibrationProfile calibrationProfile = new I2CConfiguration().ikeaCalibration();
+        Long calibratedValue = calibrationProfile.getCalibratedValue(  12411L);
+
+        System.out.println("" + calibratedValue);
+    }
+
+    @Test
+    public void testBluetoothProbe() {
+        SteinhartHartEquationCalibrationProfile calibrationProfile = new I2CConfiguration().bluetoothCalibration();
+        Long calibratedValue = calibrationProfile.getCalibratedValue(  32767L);
 
         System.out.println("" + calibratedValue);
     }
