@@ -4,3 +4,4 @@ logger:
     io.micronaut.http: DEBUG
     org.thymeleaf: INFO
     io.netty: INFO
+    nl.tabitsolutions.heatermeter.components.sensors: INFO
