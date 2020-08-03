@@ -3,6 +3,8 @@ package nl.tabitsolutions.heatermeter.components.sensors;
 import nl.tabitsolutions.heatermeter.model.Reading;
 import nl.tabitsolutions.heatermeter.model.Sensor;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import static java.util.stream.Collectors.toMap;
 
 @Service
 public class SensorsService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Map<String, Sensor<?>> sensors;
     private final ReadingsRepository readingsRepository;
@@ -35,6 +39,9 @@ public class SensorsService {
 
     @Scheduled(fixedDelay = 1000)
     public Map<String, SensorValue<?>> getCurrentReadings() {
+
+        logger.info("resgistered sensors: " + sensors);
+
         Map<String, SensorValue<?>> currentReadings = this.sensors.entrySet().stream()
                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getValue()));
 

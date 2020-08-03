@@ -17,4 +17,8 @@ public class SensorValue<T extends Number> {
     public Unit getUnit() {
         return unit;
     }
+
+    public String toString() {
+        return "" + value + " " + unit;
+    }
 }

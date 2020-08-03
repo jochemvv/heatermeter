@@ -14,4 +14,7 @@ public abstract class Sensor<T extends Number> {
 
     public abstract SensorValue<T> getValue();
 
+    public String toString() {
+        return this.identifier + " " + this.getValue();
+    }
 }
