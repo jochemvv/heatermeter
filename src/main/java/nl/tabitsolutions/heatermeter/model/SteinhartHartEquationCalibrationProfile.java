@@ -50,7 +50,7 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     public Long getCalibratedValue(Long rawValue) {
         double r = this.adcValueToResistance(rawValue);
         double tempK = this.resistanceToKelvin(r);
-        return BigDecimal.valueOf(kelvinToCelsius(tempK)).longValueExact();
+        return BigDecimal.valueOf(kelvinToCelsius(tempK)).longValue();
     }
 
     public double resistanceToKelvin(double resistance) {
@@ -58,7 +58,7 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     }
 
     public double adcValueToResistance(long adcValue) {
-        return (this.R / ((1023d / adcValue) - 1d));
+        return (this.R / ((65535d / adcValue) - 1d));
     }
 
     public double kelvinToCelsius(double kelvin) {

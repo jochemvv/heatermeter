@@ -49,10 +49,6 @@ public class PiTemperatureSensor extends Sensor<Long> {
 
     private int getRawReading(byte[] data) {
         int rawReading = ((data[0] & 0xFF) * 256) + (data[1] & 0xFF);
-        if (rawReading > 32767)
-        {
-            rawReading -= 65535;
-        }
         return rawReading;
     }
 }
