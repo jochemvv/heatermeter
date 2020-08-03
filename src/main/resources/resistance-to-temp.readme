@@ -1,0 +1,80 @@
+function init() {
+    for (var i = 0; i < probes.length; i++) {
+		p = probes[i];
+		// calculate temp using Steinhart-Hart equatino
+		var L1 = Math.log(p.calibration_resistances[0]);
+		var L2 = Math.log(p.calibration_resistances[1]);
+		var L3 = Math.log(p.calibration_resistances[2]);
+		var Y1 = 1/p.calibration_temps[0];
+		var Y2 = 1/p.calibration_temps[1];
+		var Y3 = 1/p.calibration_temps[2];
+		var gma2 = (Y2-Y1)/(L2-L1);
+		var gma3 = (Y3-Y1)/(L3-L1);
+
+		// A, B, and C are variables used in the Steinhart-Hart equation
+		// to determine temperature from resistance in a thermistor. These
+		// values will be set during the init() function.
+		let C = ((gma3-gma2)/(L3-L2))*Math.pow((L1+L2+L3), -1)
+		let B = gma2 - C * (Math.pow(L1, 2)+L1*L2+Math.pow(L2,2));
+		let A = Y1 - (B+Math.pow(L1, 2)*C)*L1;
+
+		p.resistanceToTemperature = function(R) {
+			return 1/(A+B*Math.log(R)+C*Math.pow(Math.log(R),3));
+		};
+		p.adcToResistance = function (adc_value) {
+			// Returns resistance based on the ADC value
+			return (this.R / ((1023/adc_value)-1));
+		};
+		p.convertADCValueToTemp = function (adc_value){
+		    // get the Kelvin temperature
+		    //var r = adcToResistance(adc_value, p.R);
+		    let r = this.adcToResistance(adc_value);
+		    let tempK = this.resistanceToTemperature(r);
+
+		    // convert to Celsius and round to 1 decimal place
+		    let tempC = tempK - 273.15;
+		    tempC = Math.round(tempC*10)/10;
+
+		    // get the Fahrenheit temperature, rounded
+		    let tempF = (tempC * 1.8) + 32;
+		    tempF = Math.round(tempF*10)/10;
+
+			/* Uncomment for more debugging
+			console_log("ADC Value of probe " + this.name + " is: " + adc_value);
+			console_log("Resistance of probe " + this.name + " is: " + r);
+			console_log("Temp of probe " + this.name + " is: " + tempF);
+			*/
+
+			// graphite metric object to send to graphite database
+			let probe_data = {
+				'data': {
+					[this.name.replace(/ /g, '_')]: {
+						'adc_value': adc_value,
+						'resistance': r,
+						'temperature': tempF,
+						'tempF': tempF,
+						'tempK': tempK,
+						'tempC': tempC
+					}
+				}
+			};
+			console_log(probe_data);
+
+			// write to graphite db
+			graphite_client.write(probe_data, function(err) {
+				if (!err === null) {
+					console.log("Failed to write metrics to the metrics server. err: " + err)
+				}
+			});
+
+		    // return all three temperature scales
+		    return {
+				K: tempK,
+				C: tempC,
+				F: tempF
+		    };
+		};
+    }
+	console_log("Probes initialized.");
+
+};

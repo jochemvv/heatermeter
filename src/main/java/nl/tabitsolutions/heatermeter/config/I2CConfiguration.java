@@ -4,7 +4,7 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import nl.tabitsolutions.heatermeter.components.sensors.PiTemperatureSensor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import nl.tabitsolutions.heatermeter.model.SteinhartHartEquationCalibrationProfile;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,27 +25,32 @@ public class I2CConfiguration {
         return device;
     }
 
+    @Bean(name = "ikeaCalibration")
+    public SteinhartHartEquationCalibrationProfile ikeaCalibration() {
+        return new SteinhartHartEquationCalibrationProfile(155000d, 52000d, 4300d, 174d, 298d, 364d, 100000d);
+    }
+
     @Bean(name = "channel0")
-    public PiTemperatureSensor channel0(I2CDevice i2CDevice) {
+    public PiTemperatureSensor channel0(I2CDevice i2CDevice, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
         byte[] config = {(byte)0xC4, (byte)0x83};
-        return new PiTemperatureSensor("channel0", i2CDevice, config);
+        return new PiTemperatureSensor("channel0", steinhartHartEquationCalibrationProfile, i2CDevice, config);
     }
 
     @Bean(name = "channel1")
-    public PiTemperatureSensor channel1(I2CDevice i2CDevice) {
+    public PiTemperatureSensor channel1(I2CDevice i2CDevice, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
         byte[] config = {(byte)0xD4, (byte)0x83};
-        return new PiTemperatureSensor("channel1", i2CDevice, config);
+        return new PiTemperatureSensor("channel1", steinhartHartEquationCalibrationProfile, i2CDevice, config);
     }
 
     @Bean(name = "channel2")
-    public PiTemperatureSensor channel2(I2CDevice i2CDevice) {
+    public PiTemperatureSensor channel2(I2CDevice i2CDevice, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
         byte[] config = {(byte)0xE4, (byte)0x83};
-        return new PiTemperatureSensor("channel2", i2CDevice, config);
+        return new PiTemperatureSensor("channel2", steinhartHartEquationCalibrationProfile, i2CDevice, config);
     }
 
     @Bean(name = "channel3")
-    public PiTemperatureSensor channel3(I2CDevice i2CDevice) {
+    public PiTemperatureSensor channel3(I2CDevice i2CDevice, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
         byte[] config = {(byte)0xF4, (byte)0x83};
-        return new PiTemperatureSensor("channel3", i2CDevice, config);
+        return new PiTemperatureSensor("channel3", steinhartHartEquationCalibrationProfile, i2CDevice, config);
     }
 }
