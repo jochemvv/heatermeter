@@ -39,7 +39,6 @@ public class I2CConfiguration {
 
     @Bean(name = "channel0")
     public PiTemperatureSensor channel0(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
-        byte[] config = {(byte)0xC4, (byte)0x83};
         return new PiTemperatureSensor("channel0", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
     }
 

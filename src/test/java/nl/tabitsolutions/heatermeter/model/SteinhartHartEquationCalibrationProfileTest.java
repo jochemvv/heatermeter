@@ -22,7 +22,7 @@ class SteinhartHartEquationCalibrationProfileTest {
     @Test
     public void testBluetoothProbe() {
         SteinhartHartEquationCalibrationProfile calibrationProfile = new I2CConfiguration().bluetoothCalibration();
-        Long calibratedValue = calibrationProfile.getCalibratedValue(  18767L);
+        Long calibratedValue = calibrationProfile.getCalibratedValue(  20850L);
 
         System.out.println("" + calibratedValue);
     }
