@@ -4,6 +4,7 @@ import nl.tabitsolutions.heatermeter.model.Sensor;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
 
 import com.pi4j.io.i2c.I2CDevice;
+import nl.tabitsolutions.heatermeter.model.Unit;
 
 public class PiTemperatureSensor extends Sensor<Long> {
 
@@ -24,8 +25,8 @@ public class PiTemperatureSensor extends Sensor<Long> {
                 Thread.sleep(500);
                 byte[] data = new byte[2];
                 i2cDevice.read(0x00, data, 0, 2);
-                int rawReading = getRawReading(data);
-                return null;
+                long rawReading = getRawReading(data);
+                return new SensorValue<>(rawReading, Unit.CELSIUS);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
