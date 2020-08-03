@@ -9,8 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -21,6 +23,7 @@ public class SensorsService {
 
     private final Map<String, Sensor<?>> sensors;
     private final ReadingsRepository readingsRepository;
+    private final Map<String, SensorValue<?>> lastReadings = new ConcurrentHashMap<>();
 
     public SensorsService(List<Sensor<?>> sensors,
                           ReadingsRepository readingsRepository) {
@@ -37,9 +40,13 @@ public class SensorsService {
         return sensor.getValue();
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public Map<String, SensorValue<?>> getCurrentReadings() {
 
+    public Map<String, SensorValue<?>> getLastReadings() {
+        return new HashMap<>(this.lastReadings);
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void readSensors() {
         logger.info("resgistered sensors: " + sensors);
 
         Map<String, SensorValue<?>> currentReadings = this.sensors.entrySet().stream()
@@ -48,7 +55,7 @@ public class SensorsService {
         OffsetDateTime now = OffsetDateTime.now();
         currentReadings.forEach((key, value) -> readingsRepository.addReading(key, new Reading<>(key, now, value)));
 
-        return currentReadings;
+        this.lastReadings.putAll(currentReadings);
     }
 
     public Map<String, List<Reading<?>>> getReadings() {

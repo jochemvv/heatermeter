@@ -29,7 +29,7 @@ public class MainViewController {
     @Get("/")
     public HttpResponse index() {
         return HttpResponse.ok(CollectionUtils.mapOf(
-                "sensors", new TreeMap<>(sensorsService.getCurrentReadings()),
+                "sensors", new TreeMap<>(sensorsService.getLastReadings()),
                         "readings", getReadings()
                     )
         );
