@@ -45,16 +45,16 @@ public class I2CConfiguration {
 
     @Bean(name = "channel1")
     public PiTemperatureSensor channel1(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
-        return new PiTemperatureSensor("channel1", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+        return new PiTemperatureSensor("channel1", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN1, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
     }
 
     @Bean(name = "channel2")
     public PiTemperatureSensor channel2(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
-        return new PiTemperatureSensor("channel2", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+        return new PiTemperatureSensor("channel2", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN2, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
     }
 
     @Bean(name = "channel3")
     public PiTemperatureSensor channel3(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
-        return new PiTemperatureSensor("channel3", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+        return new PiTemperatureSensor("channel3", steinhartHartEquationCalibrationProfile, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN3, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
     }
 }
