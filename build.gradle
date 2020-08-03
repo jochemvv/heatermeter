@@ -46,7 +46,7 @@ ext {
 dependencies {
 	annotationProcessor "io.micronaut:micronaut-inject-java"
 	annotationProcessor "io.micronaut:micronaut-validation"
-	annotationProcessor "io.micronaut.configuration:micronaut-openapi"
+//	annotationProcessor "io.micronaut.configuration:micronaut-openapi"
 	annotationProcessor "io.micronaut.spring:micronaut-spring-boot-annotation:$micronautSpringVersion"
 	annotationProcessor "io.micronaut.spring:micronaut-spring-web-annotation:$micronautSpringVersion"
 
