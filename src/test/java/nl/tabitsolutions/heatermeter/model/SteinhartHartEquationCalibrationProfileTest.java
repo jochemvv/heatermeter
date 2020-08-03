@@ -12,8 +12,14 @@ class SteinhartHartEquationCalibrationProfileTest {
 
     @Test
     public void test() {
-        SteinhartHartEquationCalibrationProfile calibrationProfile = new SteinhartHartEquationCalibrationProfile(155000d, 52000d, 4300d, 174d, 298d, 364d, 100000d);
-        Long calibratedValue = calibrationProfile.getCalibratedValue(18856L);
+        SteinhartHartEquationCalibrationProfile calibrationProfile = new SteinhartHartEquationCalibrationProfile(155000d,
+                52000d,
+                4300d,
+                174d,
+                298d,
+                364d,
+                100000d);
+        Long calibratedValue = calibrationProfile.getCalibratedValue(  18866L);
 
         System.out.println("" + calibratedValue);
     }

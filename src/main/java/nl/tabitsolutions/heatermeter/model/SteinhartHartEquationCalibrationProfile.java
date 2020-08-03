@@ -58,7 +58,7 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     }
 
     public double adcValueToResistance(long adcValue) {
-        return (this.R / ((65535d / adcValue) - 1d));
+        return (this.R / (((32767d * 2) / adcValue) - 1d));
     }
 
     public double kelvinToCelsius(double kelvin) {
