@@ -37,7 +37,7 @@ public class SensorsService {
                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getValue()));
 
         OffsetDateTime now = OffsetDateTime.now();
-        currentReadings.forEach((key, value) -> readingsRepository.addReading(key, new Reading<>(now, value)));
+        currentReadings.forEach((key, value) -> readingsRepository.addReading(key, new Reading<>(key, now, value)));
 
         return currentReadings;
     }
@@ -46,4 +46,7 @@ public class SensorsService {
         return readingsRepository.getReadings();
     }
 
+    public Map<OffsetDateTime, List<Reading<?>>> getReadingsByTimeStamps() {
+        return readingsRepository.getReadingsByTimeStamps();
+    }
 }
