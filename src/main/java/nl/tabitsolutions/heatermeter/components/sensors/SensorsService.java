@@ -47,7 +47,7 @@ public class SensorsService {
 
     @Scheduled(fixedDelay = 1000)
     public void readSensors() {
-        logger.info("resgistered sensors: " + sensors);
+        logger.debug("registered sensors: " + sensors);
 
         Map<String, SensorValue<?>> currentReadings = this.sensors.entrySet().stream()
                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getValue()));
