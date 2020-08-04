@@ -9,18 +9,16 @@ import nl.tabitsolutions.heatermeter.model.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PiTemperatureSensor extends Sensor<Long> {
+public class PiTemperatureSensor extends AbstractTemperatureSensor {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile;
     private final Ads1115Device.AdcPin pin;
 
     public PiTemperatureSensor(String identifier,
                                SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile,
                                Ads1115Device.AdcPin pin) {
-        super(identifier);
-        this.steinhartHartEquationCalibrationProfile = steinhartHartEquationCalibrationProfile;
+        super(identifier, steinhartHartEquationCalibrationProfile);
         this.pin = pin;
     }
 
@@ -28,7 +26,7 @@ public class PiTemperatureSensor extends Sensor<Long> {
     public SensorValue<Long> getValue() {
             try {
                 long rawReading = pin.getImmediateValue();
-                Long calibratedValue = steinhartHartEquationCalibrationProfile.getCalibratedValue(rawReading);
+                Long calibratedValue = getSteinhartHartEquationCalibrationProfile().getCalibratedValue(rawReading);
 
                 logger.debug("{}, raw {}, calibrated {}", getIdentifier(), rawReading, calibratedValue);
 

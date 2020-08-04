@@ -15,34 +15,23 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
 //    private final double gma2;
 //    private final double gma3;
 
+    private final String identifier;
+
     private final double A;
     private final double B;
     private final double C;
 
     private final double R;
 
-    public SteinhartHartEquationCalibrationProfile(double calibrationResistance1,
+    public SteinhartHartEquationCalibrationProfile(String identifier,
+                                                   double calibrationResistance1,
                                                    double calibrationResistance2,
                                                    double calibrationResistance3,
                                                    double temp1,
                                                    double temp2,
                                                    double temp3,
                                                    double seriesResistance) {
-//        this.logCalibrationResistance1 = Math.log(calibrationResistance1);
-//        this.logCalibrationResistance2 = Math.log(calibrationResistance2);
-//        this.logCalibrationResistance3 = Math.log(calibrationResistance3);
-//
-//        this.inverseTemp1 = 1d / temp1;
-//        this.inverseTemp2 = 1d / temp2;
-//        this.inverseTemp3 = 1d / temp3;
-//
-//        this.gma2 = (this.inverseTemp2 - this.inverseTemp1) / (this.logCalibrationResistance2 - this.logCalibrationResistance1);
-//        this.gma3 = (this.inverseTemp3 - this.inverseTemp1) / (this.logCalibrationResistance3 - this.logCalibrationResistance1);
-//
-//        this.C = ((gma3 - gma2) / (this.logCalibrationResistance3 - this.logCalibrationResistance2)) * Math.pow((this.logCalibrationResistance1 + this.logCalibrationResistance2 + this.logCalibrationResistance3), -1);
-//        this.B = gma2 - C * (Math.pow(this.logCalibrationResistance1, 2) + this.logCalibrationResistance1 * this.logCalibrationResistance2 + Math.pow(this.logCalibrationResistance2, 2));
-//        this.A = this.inverseTemp1 - (B + Math.pow(this.logCalibrationResistance1, 2) * C) * this.logCalibrationResistance1;
-
+        this.identifier = identifier;
         double L1 = Math.log(calibrationResistance1);
         double L2 = Math.log(calibrationResistance2);
         double L3 = Math.log(calibrationResistance3);
@@ -52,14 +41,16 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
         double gma2 = (Y2 - Y1) / (L2 - L1);
         double gma3 = (Y3 - Y1) / (L3 - L1);
 
-        // A, B, and C are doubleiables used in the Steinhart-Hart equation
-        // to determine temperature from resistance in a thermistor. These
-        // values will be set during the init() function.
         this.C = ((gma3 - gma2) / (L3 - L2)) * Math.pow((L1 + L2 + L3), -1);
         this.B = gma2 - C * (Math.pow(L1, 2) + L1 * L2 + Math.pow(L2, 2));
         this.A = Y1 - (B + Math.pow(L1, 2) * C) * L1;
 
         this.R = seriesResistance;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
     }
 
     @Override
