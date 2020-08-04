@@ -1,12 +1,16 @@
 package nl.tabitsolutions.heatermeter.config;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
-import nl.tabitsolutions.heatermeter.components.sensors.Ads1115Device;
+import com.pi4j.wiringpi.I2C;
+import nl.tabitsolutions.heatermeter.components.drivers.Ads1115Device;
+import nl.tabitsolutions.heatermeter.components.drivers.SSD1306_Constants;
+import nl.tabitsolutions.heatermeter.components.drivers.SSD1306_I2C_Display;
 import nl.tabitsolutions.heatermeter.components.sensors.PiTemperatureSensor;
 import nl.tabitsolutions.heatermeter.model.SteinhartHartEquationCalibrationProfile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +30,14 @@ public class I2CConfiguration {
     @Bean
     public Ads1115Device ads1115Device(I2CDevice i2cDevice) {
         return new Ads1115Device(i2cDevice);
+    }
+
+    @Bean
+    public SSD1306_I2C_Display display() throws IOException, I2CFactory.UnsupportedBusNumberException {
+        final GpioController gpio = GpioFactory.getInstance();
+        I2CBus i2c = I2CFactory.getInstance(I2C.CHANNEL_1);
+        return new SSD1306_I2C_Display(SSD1306_Constants.LCD_WIDTH_128, SSD1306_Constants.LCD_HEIGHT_64,
+                gpio, i2c, 0x3c);
     }
 
     @Bean(name = "channel0")

@@ -1,5 +1,6 @@
 package nl.tabitsolutions.heatermeter.components.sensors;
 
+import nl.tabitsolutions.heatermeter.components.drivers.SSD1306_I2C_Display;
 import nl.tabitsolutions.heatermeter.model.CalibrationProfile;
 import nl.tabitsolutions.heatermeter.model.Reading;
 import nl.tabitsolutions.heatermeter.model.Sensor;
@@ -8,6 +9,7 @@ import nl.tabitsolutions.heatermeter.model.SensorValue;
 import nl.tabitsolutions.heatermeter.model.SteinhartHartEquationCalibrationProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +32,17 @@ public class TemperatureSensorsService {
     private final List<CalibrationProfile<Long>>  calibrationProfiles;
     private final ReadingsRepository readingsRepository;
     private final Map<String, SensorValue<Long>> lastReadings = new ConcurrentHashMap<>();
+    private final SSD1306_I2C_Display display;
 
     public TemperatureSensorsService(List<AbstractTemperatureSensor> sensors,
                                      List<CalibrationProfile<Long>> calibrationProfiles,
-                                     ReadingsRepository readingsRepository) {
+                                     ReadingsRepository readingsRepository,
+                                     Optional<SSD1306_I2C_Display> display) {
 
         this.sensors = sensors.stream().collect(toMap(Sensor::getIdentifier, s -> s));
         this.calibrationProfiles = calibrationProfiles;
         this.readingsRepository = readingsRepository;
+        this.display = display.orElse(null);
     }
 
     public boolean isEnabled(String identifier) {
@@ -77,6 +82,15 @@ public class TemperatureSensorsService {
         this.lastReadings.clear();
 
         this.lastReadings.putAll(currentReadings.entrySet().stream().filter(entry -> entry.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
+
+        if (this.display != null) {
+            try {
+                this.display.begin();
+                this.display.displayString("Hello World");
+            } catch (Exception e) {
+                logger.warn("Error with display", e);
+            }
+        }
     }
 
     public Map<String, List<Reading<?>>> getReadings() {

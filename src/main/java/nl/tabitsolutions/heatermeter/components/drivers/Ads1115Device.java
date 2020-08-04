@@ -1,4 +1,4 @@
-package nl.tabitsolutions.heatermeter.components.sensors;
+package nl.tabitsolutions.heatermeter.components.drivers;
 
 import com.pi4j.io.i2c.I2CDevice;
 

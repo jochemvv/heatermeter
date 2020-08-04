@@ -1,13 +1,14 @@
 package nl.tabitsolutions.heatermeter.components.sensors;
 
-import nl.tabitsolutions.heatermeter.model.Sensor;
+import nl.tabitsolutions.heatermeter.components.drivers.Ads1115Device;
+import nl.tabitsolutions.heatermeter.components.drivers.SSD1306_I2C_Display;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
 
-import com.pi4j.io.i2c.I2CDevice;
 import nl.tabitsolutions.heatermeter.model.SteinhartHartEquationCalibrationProfile;
 import nl.tabitsolutions.heatermeter.model.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PiTemperatureSensor extends AbstractTemperatureSensor {
 
