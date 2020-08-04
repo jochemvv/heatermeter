@@ -27,7 +27,7 @@ public class ReadingsRepository {
     }
 
     public Map<OffsetDateTime, List<Reading<?>>> getReadingsByTimeStamps() {
-        return readings.values().stream()
+        return new ArrayList<>(readings.values()).stream()
                 .flatMap(Collection::stream)
                 .collect(HashMap::new, (m, v) -> m.computeIfAbsent(v.getTimestamp(), (r) -> new ArrayList<>()).add(v), HashMap::putAll);
     }
