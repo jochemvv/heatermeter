@@ -20,6 +20,7 @@ public class PiTemperatureSensor extends AbstractTemperatureSensor {
                                Ads1115Device.AdcPin pin) {
         super(identifier, steinhartHartEquationCalibrationProfile);
         this.pin = pin;
+        setEnabled(false);
     }
 
     @Override
