@@ -89,12 +89,11 @@ public class TemperatureSensorsService {
         if (this.display != null) {
             try {
                 this.display.begin();
-                List<String> toDisplay = this.sensors.keySet().stream()
+
+                this.display.displayString(this.sensors.keySet().stream()
                         .sorted()
                         .map(sensorName -> sensorName + ": " + (lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--"))
-                        .collect(Collectors.toList());
-
-                this.display.displayString(toDisplay.toArray(new String[0]));
+                        .toArray(String[]::new));
             } catch (Exception e) {
                 logger.warn("Error with display", e);
             }
