@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,9 @@ public class ReadingsRepository {
     }
 
     public Map<OffsetDateTime, List<Reading<?>>> getReadingsByTimeStamps() {
-        return readings.values().stream().flatMap(Collection::stream).collect(Collectors.groupingBy(Reading::getTimestamp));
+        return readings.values().stream()
+                .flatMap(Collection::stream)
+                .collect(HashMap::new, (m, v) -> m.computeIfAbsent(v.getTimestamp(), (r) -> new ArrayList<>()).add(v), HashMap::putAll);
     }
 
 }

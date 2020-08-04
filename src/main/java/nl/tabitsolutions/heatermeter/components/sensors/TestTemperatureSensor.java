@@ -14,8 +14,9 @@ public class TestTemperatureSensor extends Sensor<Long> {
     private Random random = new Random();
     private AtomicLong value = new AtomicLong(60);
 
-    public TestTemperatureSensor(String identifier) {
+    public TestTemperatureSensor(String identifier, boolean enabled) {
         super(identifier);
+        this.setEnabled(enabled);
     }
 
     @Override

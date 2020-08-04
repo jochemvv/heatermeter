@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Sensors</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" th:inline="javascript">
         // Load the Visualization API and the piechart package.
@@ -13,9 +14,14 @@
         google.setOnLoadCallback(drawChart);
 
         function drawChart() {
-            var data = google.visualization.arrayToDataTable(
-                /*[[${readings}]]*/
-            );
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Timestamp');
+            data.addColumn('number', 'Sensor 0');
+            data.addColumn('number', 'Sensor 1');
+            data.addColumn('number', 'Sensor 2');
+            data.addColumn('number', 'Sensor 3');
+
+            data.addRows(/*[[${readings}]]*/);
 
             var options = {
                 title: 'Probe temperatures graph',
@@ -30,12 +36,35 @@
 <body>
 <h1>Sensors:</h1>
 <section>
-    <table>
-    <tr th:each="instance : ${sensors}">
-        <td th:text="${instance.key}">keyvalue</td>
-        <td th:text="${instance.value.value}">num</td>
-        <td th:text="${instance.value.unit}">num</td>
-    </tr>
+    <form action="#" name="sensorconfig" th:object="${sensorsView}" method="post">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Probe</th>
+            <th scope="col">Temperature</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Probe Mode</th>
+            <th scope="col">Probe Mode</th>
+        </tr>
+        </thead>
+        <tr th:each="sensor, itemStat : *{sensors}">
+
+            <td th:text="*{sensors[__${itemStat.index}__].identifier}">keyvalue</td>
+            <td th:text="*{sensors[__${itemStat.index}__].reading}">num</td>
+            <td th:text="*{sensors[__${itemStat.index}__].unit}">text</td>
+            <td th:text="*{sensors[__${itemStat.index}__].mode}">text</td>
+            <td >
+                <select name="probe-mode" th:field="*{sensors[__${itemStat.index}__].mode}">
+                    <option th:value="'Disabled'" th:text="Disabled" th:selected="*{sensors[__${itemStat.index}__].mode}=='Disabled'" ></option>
+                    <option th:value="'Ikea'" th:text="Ikea" th:selected="*{sensors[__${itemStat.index}__].mode}=='Ikea'" ></option>
+                    <option th:value="'Mastrad'" th:text="Mastrad" th:selected="*{sensors[__${itemStat.index}__].mode}=='Mastrad'" ></option>
+                    <option th:value="'Asdf'" th:text="Asdf" th:selected="*{sensors[__${itemStat.index}__].mode}=='Asdf'" ></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="submit" value="Update"/></td>
+        </tr>
     </table>
 </section>
 <h1>Graphs:</h1>

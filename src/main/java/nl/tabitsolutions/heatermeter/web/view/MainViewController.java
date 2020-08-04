@@ -6,11 +6,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.views.View;
 import nl.tabitsolutions.heatermeter.components.sensors.SensorsService;
-import nl.tabitsolutions.heatermeter.model.Reading;
-import nl.tabitsolutions.heatermeter.model.SensorValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -29,7 +26,7 @@ public class MainViewController {
     @Get("/")
     public HttpResponse index() {
         return HttpResponse.ok(CollectionUtils.mapOf(
-                "sensors", new TreeMap<>(sensorsService.getLastReadings()),
+                "sensorsView", new SensorsView(new ArrayList<>(new TreeMap<>(sensorsService.getSensorInfo()).values())),
                         "readings", getReadings()
                     )
         );
@@ -38,12 +35,11 @@ public class MainViewController {
     private List<List<Object>> getReadings() {
         ArrayList<List<Object>> objects = new ArrayList<>();
 
-        objects.add(Arrays.asList("time" ,"s1", "s2", "s3", "s4"));
         objects.addAll(new TreeMap<>(sensorsService.getReadingsByTimeStamps()).entrySet().stream()
                             .map(entry -> {
                                 ArrayList<Object> v = new ArrayList<>();
                                 v.add(entry.getKey().toEpochSecond());
-                                v.addAll(entry.getValue().stream().map(Reading::getValue).map(SensorValue::getValue).collect(toList()));
+                                v.addAll(entry.getValue().stream().map(reading -> reading.getValue() != null ?  reading.getValue().getValue() : null).collect(toList()));
                                 return v;
                             })
                             .collect(toList()));
