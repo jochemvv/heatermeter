@@ -81,12 +81,17 @@ public class TemperatureSensorsService {
 
         this.lastReadings.clear();
 
-        this.lastReadings.putAll(currentReadings.entrySet().stream().filter(entry -> entry.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        Map<String, SensorValue<Long>> lr = currentReadings.entrySet().stream().filter(entry -> entry.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+        this.lastReadings.putAll(lr);
 
         if (this.display != null) {
             try {
                 this.display.begin();
-                this.display.displayString("Hello World");
+                StringBuilder toDisplay = new StringBuilder();
+                for (String sensorName : this.sensors.keySet()) {
+                    toDisplay.append(sensorName).append(": ").append(lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--").append("\n");
+                }
+                this.display.displayString(toDisplay.toString());
             } catch (Exception e) {
                 logger.warn("Error with display", e);
             }
