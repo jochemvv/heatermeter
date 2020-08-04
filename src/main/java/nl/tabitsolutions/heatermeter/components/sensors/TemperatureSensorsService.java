@@ -69,7 +69,7 @@ public class TemperatureSensorsService {
                  HashMap::putAll);
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 5000)
     public void readSensors() {
         logger.debug("registered sensors: " + sensors);
 
