@@ -23,8 +23,16 @@
             data.addRows(/*[[${readings}]]*/);
 
             var options = {
-                title: 'Probe temperatures graph',
-                pieHole: 0.4,
+                title: "Probe temperatures graph",
+                isStacked: true,
+                vAxis: {
+                    title: "Temperature (C)",
+                    viewWindowMode:'explicit',
+                    viewWindow:{
+                        max:300,
+                        min:0
+                    }
+                }
             };
 
             var chart = new google.visualization.LineChart(document.getElementById('div_chart'));
@@ -67,7 +75,7 @@
     </table>
     </form>
 </section>
-<h1>Graphs:</h1>
+<h1>Graph:</h1>
 <section>
     <div id="div_chart" style="width: 800px; height: 400px;"></div>
 </section>
