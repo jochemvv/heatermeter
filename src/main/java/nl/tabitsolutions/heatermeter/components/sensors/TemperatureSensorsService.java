@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -88,10 +89,11 @@ public class TemperatureSensorsService {
         if (this.display != null) {
             try {
                 this.display.begin();
-                List<String> toDisplay = new ArrayList<>();
-                for (String sensorName : this.sensors.keySet()) {
-                    toDisplay.add(sensorName + ": " + (lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--"));
-                }
+                List<String> toDisplay = this.sensors.keySet().stream()
+                        .sorted()
+                        .map(sensorName -> sensorName + ": " + (lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--"))
+                        .collect(Collectors.toList());
+
                 this.display.displayString(toDisplay.toArray(new String[0]));
             } catch (Exception e) {
                 logger.warn("Error with display", e);
