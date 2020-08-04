@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,11 +88,11 @@ public class TemperatureSensorsService {
         if (this.display != null) {
             try {
                 this.display.begin();
-                StringBuilder toDisplay = new StringBuilder();
+                List<String> toDisplay = new ArrayList<>();
                 for (String sensorName : this.sensors.keySet()) {
-                    toDisplay.append(sensorName).append(": ").append(lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--").append("\n");
+                    toDisplay.add(sensorName + ": " + (lr.containsKey(sensorName) ? lr.get(sensorName).getValue() : "--"));
                 }
-                this.display.displayString(toDisplay.toString());
+                this.display.displayString(toDisplay.toArray(new String[0]));
             } catch (Exception e) {
                 logger.warn("Error with display", e);
             }
