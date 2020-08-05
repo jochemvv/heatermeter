@@ -16,8 +16,12 @@ public class CalibrationConfiguration {
     }
 
     @Bean(name = "mastradCalibration")
-    public SteinhartHartEquationCalibrationProfile bluetoothCalibration() {
+    public SteinhartHartEquationCalibrationProfile mastradCalibration() {
         return new SteinhartHartEquationCalibrationProfile("Mastrad", 785000d, 248000d, 22000d, 273d, 296d, 355d, 100000d);
     }
 
+    @Bean(name = "aldiCalibration")
+    public SteinhartHartEquationCalibrationProfile aldiCalibration() {
+        return new SteinhartHartEquationCalibrationProfile("Aldi", 325000d, 102000d, 10000d, 276d, 297d, 325d, 100000d);
+    }
 }
