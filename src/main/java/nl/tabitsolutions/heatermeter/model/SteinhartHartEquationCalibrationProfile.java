@@ -4,17 +4,6 @@ import java.math.BigDecimal;
 
 public class SteinhartHartEquationCalibrationProfile implements CalibrationProfile<Long> {
 
-//    private final double logCalibrationResistance1;
-//    private final double logCalibrationResistance2;
-//    private final double logCalibrationResistance3;
-//
-//    private final double inverseTemp1;
-//    private final double inverseTemp2;
-//    private final double inverseTemp3;
-//
-//    private final double gma2;
-//    private final double gma3;
-
     private final String identifier;
 
     private final double A;
@@ -22,6 +11,19 @@ public class SteinhartHartEquationCalibrationProfile implements CalibrationProfi
     private final double C;
 
     private final double R;
+
+    public SteinhartHartEquationCalibrationProfile(String identifier,
+                                                   double A,
+                                                   double B,
+                                                   double C,
+                                                   double seriesResistance) {
+
+        this.identifier = identifier;
+        this.A = A;
+        this.B = B;
+        this.C = C;
+        this.R = seriesResistance;
+    }
 
     public SteinhartHartEquationCalibrationProfile(String identifier,
                                                    double calibrationResistance1,

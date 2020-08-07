@@ -24,4 +24,14 @@ public class CalibrationConfiguration {
     public SteinhartHartEquationCalibrationProfile aldiCalibration() {
         return new SteinhartHartEquationCalibrationProfile("Aldi", 325000d, 102000d, 10000d, 276d, 297d, 325d, 100000d);
     }
+
+    @Bean(name = "thermoWorks")
+    public SteinhartHartEquationCalibrationProfile thermoWorksCalibration() {
+        return new SteinhartHartEquationCalibrationProfile("ThermoWorks",
+                7.3431401e-4,
+                2.1574370e-4,
+                9.5156860e-8,
+                100000d
+                );
+    }
 }
