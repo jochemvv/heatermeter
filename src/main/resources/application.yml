@@ -1,3 +1,14 @@
+micronaut:
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/ui/**"
+        paths: "classpath:static"
+  server:
+    cors:
+      enabled: true
+
 logger:
   levels:
     io.micronaut: INFO

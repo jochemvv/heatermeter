@@ -9,6 +9,9 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.views.View;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import nl.tabitsolutions.heatermeter.components.sensors.TemperatureSensorsService;
 import nl.tabitsolutions.heatermeter.model.SensorInfo;
 
@@ -23,6 +26,14 @@ import java.util.TreeMap;
 import static java.util.stream.Collectors.toList;
 
 @Controller("/probes")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Proves API",
+                version = "0.01-DRAFT",
+                description = "Probes API"
+        )
+)
+@Hidden
 public class MainViewController {
 
     private final TemperatureSensorsService sensorsService;
@@ -43,7 +54,7 @@ public class MainViewController {
 
     @Consumes(value = MediaType.APPLICATION_FORM_URLENCODED)
     @Post("/")
-    public HttpResponse greetingSubmit(@Body SensorsView update) throws URISyntaxException {
+    public HttpResponse sensorsUpdate(@Body SensorsView update) throws URISyntaxException {
         handleUpdate(update);
         URI location = new URI("/probes");
         return HttpResponse.redirect(location);
