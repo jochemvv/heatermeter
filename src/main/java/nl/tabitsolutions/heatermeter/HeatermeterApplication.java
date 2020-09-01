@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class HeatermeterApplication {
 
 	public static void main(String[] args) {
-		Micronaut.run(HeatermeterApplication.class);
+		Micronaut.build(args).eagerInitSingletons(true).mainClass(HeatermeterApplication.class).start();
 //		SpringApplication.run(HeatermeterApplication.class, args);
 	}
 }
