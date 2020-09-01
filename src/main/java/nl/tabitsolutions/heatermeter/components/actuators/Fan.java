@@ -9,6 +9,7 @@ import org.sputnikdev.bluetooth.manager.DeviceDiscoveryListener;
 import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -43,10 +44,19 @@ public class Fan implements DeviceDiscoveryListener {
     }
 
     public void turnOn() {
+        logger.error("turning on");
         Optional.ofNullable(uartDevice.get())
                 .ifPresent(device ->  {
-                    bluetoothManager.getDeviceGovernor(device.getURL(), true)
-                            .getCharacteristicGovernors()
+                    logger.error("UART present");
+
+                    List<CharacteristicGovernor> characteristicGovernors = bluetoothManager.getDeviceGovernor(device.getURL(), true)
+                            .getCharacteristicGovernors();
+
+                    if(characteristicGovernors.isEmpty()) {
+                        logger.error("no characteristics");
+                    };
+
+                    characteristicGovernors
                             .stream()
                             .peek(characteristic -> {
                                 logger.info("characteristic {} {} {}", characteristic.getFlags(), characteristic.isWritable(), characteristic.getURL());
@@ -54,6 +64,7 @@ public class Fan implements DeviceDiscoveryListener {
                             .filter(CharacteristicGovernor::isWritable)
                             .forEach(characteristic -> characteristic.write("fan on".getBytes()));
                 });
+        logger.error("turning on done");
     }
 
     public void turnOff() {
