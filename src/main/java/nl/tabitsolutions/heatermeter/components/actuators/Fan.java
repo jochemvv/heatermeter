@@ -22,8 +22,7 @@ public class Fan {
     @PostConstruct
     public void printBleDevices() {
         bluetoothManager.getDiscoveredDevices().stream()
-                .filter(DiscoveredDevice::isBleEnabled)
-                .peek(device -> logger.info("BLE device found: {}", device.getDisplayName()));
+                .peek(device -> logger.info("BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias()));
     }
 
     public void turnOn() {
