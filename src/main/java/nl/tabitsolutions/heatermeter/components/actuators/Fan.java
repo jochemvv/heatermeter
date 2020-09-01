@@ -7,6 +7,7 @@ import org.sputnikdev.bluetooth.manager.BluetoothManager;
 import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
 
 import javax.annotation.PostConstruct;
+import java.util.Set;
 
 @Component
 public class Fan {
@@ -21,8 +22,15 @@ public class Fan {
 
     @PostConstruct
     public void printBleDevices() {
-        bluetoothManager.getDiscoveredDevices().stream()
+        Set<DiscoveredDevice> discoveredDevices = bluetoothManager.getDiscoveredDevices();
+
+        discoveredDevices.stream()
                 .peek(device -> logger.info("BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias()));
+
+        if (discoveredDevices.isEmpty()) {
+            logger.info("NO DEVICES FOUND!");
+        }
+
     }
 
     public void turnOn() {
