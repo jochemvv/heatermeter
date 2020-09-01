@@ -31,6 +31,8 @@ public class Fan implements DeviceDiscoveryListener {
 
         if (discoveredDevices.isEmpty()) {
             logger.info("NO DEVICES FOUND!");
+        } else {
+            logger.info("DEVICES FOUND! {}", discoveredDevices.size());
         }
 
         this.bluetoothManager.addDeviceDiscoveryListener(this);
