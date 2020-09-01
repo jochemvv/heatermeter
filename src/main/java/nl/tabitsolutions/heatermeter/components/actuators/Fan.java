@@ -4,15 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.sputnikdev.bluetooth.manager.BluetoothManager;
+import org.sputnikdev.bluetooth.manager.BluetoothSmartDeviceListener;
 import org.sputnikdev.bluetooth.manager.CharacteristicGovernor;
 import org.sputnikdev.bluetooth.manager.DeviceDiscoveryListener;
+import org.sputnikdev.bluetooth.manager.DeviceGovernor;
 import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
+import org.sputnikdev.bluetooth.manager.GattCharacteristic;
+import org.sputnikdev.bluetooth.manager.GattService;
+import org.sputnikdev.bluetooth.manager.GenericBluetoothDeviceListener;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class Fan implements DeviceDiscoveryListener {
@@ -86,7 +93,46 @@ public class Fan implements DeviceDiscoveryListener {
         if (device.isBleEnabled()) {
             logger.info("!!! BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
             if (device.getDisplayName().toUpperCase().contains("UART")) {
-                logger.info("!!! UART DEVICE FOUND !!!");
+                logger.info("!!!######################### UART DEVICE FOUND ######################################!!!");
+
+                DeviceGovernor deviceGovernor = bluetoothManager.getDeviceGovernor(device.getURL());
+                deviceGovernor.addBluetoothSmartDeviceListener(new BluetoothSmartDeviceListener() {
+                    @Override
+                    public void servicesResolved(List<GattService> gattServices) {
+                        logger.info("################################################### Trying to authenticate...{} ", gattServices.size());
+
+                        gattServices.stream()
+                                .peek(service -> logger.info("################################################### service {}", service.getCharacteristics().stream().map(GattCharacteristic::getFlags).collect(toList())));
+                    }
+
+                    @Override
+                    public void connected() {
+
+                    }
+                });
+                deviceGovernor.addGenericBluetoothDeviceListener(new GenericBluetoothDeviceListener() {
+                    @Override
+                    public void online() {
+                        logger.info("################################################### Online");
+                    }
+
+                    @Override
+                    public void offline() {
+                        logger.info("################################################### Offline");
+                    }
+
+                    @Override
+                    public void blocked(boolean blocked) {
+                        logger.info("################################################### blocked {}", blocked);
+                    }
+
+                    @Override
+                    public void rssiChanged(short rssi) {
+                        logger.info("################################################### rssi {}", rssi);
+                    }
+                });
+
+
                 uartDevice.set(device);
             }
         }

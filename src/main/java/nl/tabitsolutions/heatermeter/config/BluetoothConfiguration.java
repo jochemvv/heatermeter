@@ -14,6 +14,7 @@ public class BluetoothConfiguration {
     public BluetoothManager bluetoothManager() {
         return new BluetoothManagerBuilder()
                 .withTinyBTransport(true)
+                .withIgnoreTransportInitErrors(true)
                 .withDiscovering(true)
                 .withCombinedAdapters(true)
                 .withCombinedDevices(false)
