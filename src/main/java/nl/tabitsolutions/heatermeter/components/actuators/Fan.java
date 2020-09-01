@@ -38,8 +38,10 @@ public class Fan implements DeviceDiscoveryListener {
     public void printBleDevices() {
         Set<DiscoveredDevice> discoveredDevices = bluetoothManager.getDiscoveredDevices();
 
-        discoveredDevices.stream()
-                .peek(device -> logger.info("BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias()));
+        discoveredDevices.forEach(device -> {
+            logger.info("BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+            addDevice(device);
+        });
 
         if (discoveredDevices.isEmpty()) {
             logger.info("NO DEVICES FOUND!");
@@ -92,49 +94,53 @@ public class Fan implements DeviceDiscoveryListener {
     public void discovered(DiscoveredDevice device) {
         if (device.isBleEnabled()) {
             logger.info("!!! BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
-            if (device.getDisplayName().toUpperCase().contains("UART")) {
-                logger.info("!!!######################### UART DEVICE FOUND ######################################!!!");
+            addDevice(device);
+        }
+    }
 
-                DeviceGovernor deviceGovernor = bluetoothManager.getDeviceGovernor(device.getURL());
-                deviceGovernor.addBluetoothSmartDeviceListener(new BluetoothSmartDeviceListener() {
-                    @Override
-                    public void servicesResolved(List<GattService> gattServices) {
-                        logger.info("################################################### Trying to authenticate...{} ", gattServices.size());
+    private void addDevice(DiscoveredDevice device) {
+        if (device.getDisplayName().toUpperCase().contains("UART")) {
+            logger.info("!!!######################### UART DEVICE FOUND ######################################!!!");
 
-                        gattServices.stream()
-                                .peek(service -> logger.info("################################################### service {}", service.getCharacteristics().stream().map(GattCharacteristic::getFlags).collect(toList())));
-                    }
+            DeviceGovernor deviceGovernor = bluetoothManager.getDeviceGovernor(device.getURL());
+            deviceGovernor.addBluetoothSmartDeviceListener(new BluetoothSmartDeviceListener() {
+                @Override
+                public void servicesResolved(List<GattService> gattServices) {
+                    logger.info("################################################### Trying to authenticate...{} ", gattServices.size());
 
-                    @Override
-                    public void connected() {
+                    gattServices.stream()
+                            .peek(service -> logger.info("################################################### service {}", service.getCharacteristics().stream().map(GattCharacteristic::getFlags).collect(toList())));
+                }
 
-                    }
-                });
-                deviceGovernor.addGenericBluetoothDeviceListener(new GenericBluetoothDeviceListener() {
-                    @Override
-                    public void online() {
-                        logger.info("################################################### Online");
-                    }
+                @Override
+                public void connected() {
 
-                    @Override
-                    public void offline() {
-                        logger.info("################################################### Offline");
-                    }
+                }
+            });
+            deviceGovernor.addGenericBluetoothDeviceListener(new GenericBluetoothDeviceListener() {
+                @Override
+                public void online() {
+                    logger.info("################################################### Online");
+                }
 
-                    @Override
-                    public void blocked(boolean blocked) {
-                        logger.info("################################################### blocked {}", blocked);
-                    }
+                @Override
+                public void offline() {
+                    logger.info("################################################### Offline");
+                }
 
-                    @Override
-                    public void rssiChanged(short rssi) {
-                        logger.info("################################################### rssi {}", rssi);
-                    }
-                });
+                @Override
+                public void blocked(boolean blocked) {
+                    logger.info("################################################### blocked {}", blocked);
+                }
+
+                @Override
+                public void rssiChanged(short rssi) {
+                    logger.info("################################################### rssi {}", rssi);
+                }
+            });
 
 
-                uartDevice.set(device);
-            }
+            uartDevice.set(device);
         }
     }
 
