@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.sputnikdev.bluetooth.manager.BluetoothManager;
+import org.sputnikdev.bluetooth.manager.CharacteristicGovernor;
 import org.sputnikdev.bluetooth.manager.DeviceDiscoveryListener;
 import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
 
@@ -44,16 +45,28 @@ public class Fan implements DeviceDiscoveryListener {
     public void turnOn() {
         Optional.ofNullable(uartDevice.get())
                 .ifPresent(device ->  {
-                    bluetoothManager.getCharacteristicGovernor(device.getURL(), true)
-                            .write("fan on".getBytes());
+                    bluetoothManager.getDeviceGovernor(device.getURL(), true)
+                            .getCharacteristicGovernors()
+                            .stream()
+                            .peek(characteristic -> {
+                                logger.info("characteristic {} {} {}", characteristic.getFlags(), characteristic.isWritable(), characteristic.getURL());
+                            })
+                            .filter(CharacteristicGovernor::isWritable)
+                            .forEach(characteristic -> characteristic.write("fan on".getBytes()));
                 });
     }
 
     public void turnOff() {
         Optional.ofNullable(uartDevice.get())
                 .ifPresent(device ->  {
-                    bluetoothManager.getCharacteristicGovernor(device.getURL(), true)
-                            .write("fan off".getBytes());
+                    bluetoothManager.getDeviceGovernor(device.getURL(), true)
+                            .getCharacteristicGovernors()
+                            .stream()
+                            .peek(characteristic -> {
+                                logger.info("characteristic {} {} {}", characteristic.getFlags(), characteristic.isWritable(), characteristic.getURL());
+                            })
+                            .filter(CharacteristicGovernor::isWritable)
+                            .forEach(characteristic -> characteristic.write("fan off".getBytes()));
                 });
     }
 
