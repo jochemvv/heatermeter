@@ -3,11 +3,10 @@ package nl.tabitsolutions.heatermeter.web.rest;
 import io.micronaut.http.annotation.Get;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.tabitsolutions.heatermeter.components.actuators.Fan;
 import nl.tabitsolutions.heatermeter.components.sensors.TemperatureSensorsService;
 import nl.tabitsolutions.heatermeter.model.SensorValue;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HeaterMeterRestController {
 
     public final TemperatureSensorsService sensorsService;
+    public final Fan fan;
 
-    public HeaterMeterRestController(TemperatureSensorsService sensorsService) {
+    public HeaterMeterRestController(TemperatureSensorsService sensorsService,
+                                     Fan fan) {
         this.sensorsService = sensorsService;
+        this.fan = fan;
     }
 
     @Get("/health")
@@ -38,5 +40,11 @@ public class HeaterMeterRestController {
     @Schema(name="SensorValue")
     public SensorValue<Long> getReading(@PathVariable("sensorIdentifier") String sensorIdentifier) {
         return sensorsService.getReadingFrom(sensorIdentifier);
+    }
+
+    @Get("/fan")
+    public String fan() {
+        fan.printBleDevices();
+        return "ok";
     }
 }
