@@ -72,6 +72,7 @@ public class Fan implements DeviceDiscoveryListener {
     public void deviceLost(DiscoveredDevice device) {
         if (device.isBleEnabled()) {
             logger.info("!!! BLE device lost !!! : {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+            uartDevice.set(null);
         }
     }
 }
