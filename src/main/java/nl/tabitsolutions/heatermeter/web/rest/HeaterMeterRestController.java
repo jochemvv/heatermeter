@@ -42,9 +42,15 @@ public class HeaterMeterRestController {
         return sensorsService.getReadingFrom(sensorIdentifier);
     }
 
-    @Get("/fan")
-    public String fan() {
-        fan.printBleDevices();
+    @Get("/fanOn")
+    public String fanOn() {
+        fan.turnOn();
+        return "ok";
+    }
+
+    @Get("/fanOff")
+    public String fanOff() {
+        fan.turnOff();
         return "ok";
     }
 }

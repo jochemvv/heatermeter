@@ -8,7 +8,9 @@ import org.sputnikdev.bluetooth.manager.DeviceDiscoveryListener;
 import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class Fan implements DeviceDiscoveryListener {
@@ -16,6 +18,7 @@ public class Fan implements DeviceDiscoveryListener {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final BluetoothManager bluetoothManager;
+    private final AtomicReference<DiscoveredDevice> uartDevice = new AtomicReference<>();
 
     public Fan(BluetoothManager bluetoothManager) {
         this.bluetoothManager = bluetoothManager;
@@ -39,20 +42,36 @@ public class Fan implements DeviceDiscoveryListener {
     }
 
     public void turnOn() {
-
+        Optional.ofNullable(uartDevice.get())
+                .ifPresent(device ->  {
+                    bluetoothManager.getCharacteristicGovernor(device.getURL(), true)
+                            .write("fan on".getBytes());
+                });
     }
 
     public void turnOff() {
-
+        Optional.ofNullable(uartDevice.get())
+                .ifPresent(device ->  {
+                    bluetoothManager.getCharacteristicGovernor(device.getURL(), true)
+                            .write("fan off".getBytes());
+                });
     }
 
     @Override
     public void discovered(DiscoveredDevice device) {
-        logger.info("!!! BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+        if (device.isBleEnabled()) {
+            logger.info("!!! BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+            if (device.getDisplayName().toUpperCase().contains("UART")) {
+                logger.info("!!! UART DEVICE FOUND !!!");
+                uartDevice.set(device);
+            }
+        }
     }
 
     @Override
     public void deviceLost(DiscoveredDevice device) {
-        logger.info("!!! BLE device found: {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+        if (device.isBleEnabled()) {
+            logger.info("!!! BLE device lost !!! : {} {} {} {}", device.getDisplayName(), device.isBleEnabled(), device.getName(), device.getAlias());
+        }
     }
 }
