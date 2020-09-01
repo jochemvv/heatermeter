@@ -16,6 +16,7 @@ public class BluetoothConfiguration {
                 .withTinyBTransport(true)
                 .withDiscovering(true)
                 .withCombinedAdapters(true)
+                .withCombinedDevices(false)
                 .build();
     }
 }
