@@ -16,6 +16,7 @@ logger:
     org.thymeleaf: INFO
     io.netty: INFO
     nl.tabitsolutions.heatermeter.components.sensors: INFO
+    org.sputnikdev.bluetooth.manager: INFO
 
 
 jackson:
