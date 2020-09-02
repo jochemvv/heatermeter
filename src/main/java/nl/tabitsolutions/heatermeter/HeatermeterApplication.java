@@ -14,8 +14,10 @@ import tinyb.BluetoothDevice;
 import tinyb.BluetoothGattService;
 import tinyb.BluetoothManager;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -57,7 +59,9 @@ public class HeatermeterApplication {
 			}
 			logger.info("!!!######################### resolved services {}", device.getServices().size());
 			for (BluetoothGattService resolvedService : device.getServices()) {
-				logger.info("!!!######################### resolved service {}, {}", resolvedService.getCharacteristics(), resolvedService.getUUID());
+				logger.info("!!!######################### resolved service {}, {}",
+						resolvedService.getCharacteristics().stream().flatMap(c -> Arrays.stream(c.getFlags())).collect(Collectors.joining()),
+						resolvedService.getUUID());
 			}
 		}
 	}
