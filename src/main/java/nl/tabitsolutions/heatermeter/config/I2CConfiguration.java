@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import javax.inject.Named;
 import java.io.IOException;
 
 @Configuration
@@ -41,13 +42,15 @@ public class I2CConfiguration {
     }
 
     @Bean(name = "channel0")
-    public PiTemperatureSensor channel0(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile ikeaCalibration) {
-        return new PiTemperatureSensor("channel0", ikeaCalibration, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+    public PiTemperatureSensor channel0(Ads1115Device ads1115Device, @Named("mastradCalibration") SteinhartHartEquationCalibrationProfile mastradCalibration) {
+        PiTemperatureSensor channel0 = new PiTemperatureSensor("channel0", mastradCalibration, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN0, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+        channel0.setEnabled(true);
+        return channel0;
     }
 
     @Bean(name = "channel1")
-    public PiTemperatureSensor channel1(Ads1115Device ads1115Device, SteinhartHartEquationCalibrationProfile ikeaCalibration) {
-        return new PiTemperatureSensor("channel1", ikeaCalibration, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN1, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
+    public PiTemperatureSensor channel1(Ads1115Device ads1115Device, @Named("thermoWorks") SteinhartHartEquationCalibrationProfile thermoWorksCalibration) {
+        return new PiTemperatureSensor("channel1", thermoWorksCalibration, ads1115Device.openAdcPin(Ads1115Device.Pin.PIN1, Ads1115Device.ProgrammableGainAmplifierValue.PGA_4_096V));
     }
 
     @Bean(name = "channel2")
