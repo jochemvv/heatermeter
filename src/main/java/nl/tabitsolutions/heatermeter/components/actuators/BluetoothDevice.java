@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class BluetoothDevice {
 
-    private static final Logger logger = LoggerFactory.getLogger(HeatermeterApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final String UART = "UART";
     public static final int MAX_TRIES = 30;
