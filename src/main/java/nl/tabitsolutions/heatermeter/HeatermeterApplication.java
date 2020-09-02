@@ -68,7 +68,7 @@ public class HeatermeterApplication {
 
 			DeviceGovernor deviceGovernor = bluetoothManager.getDeviceGovernor(device.getURL());
 			while (!deviceGovernor.isServicesResolved()) {
-				logger.info("!!!######################### waiting for services to be resolved");
+				logger.info("!!!######################### waiting for services to be resolved {}", deviceGovernor.isConnected());
 				Thread.sleep(1000L);
 			}
 			logger.info("!!!######################### resolved services {}", deviceGovernor.getResolvedServices().size());
