@@ -1,7 +1,6 @@
 package nl.tabitsolutions.heatermeter.config;
 
 import nl.tabitsolutions.heatermeter.components.actuators.BluetoothDevice;
-import nl.tabitsolutions.heatermeter.components.actuators.Fan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
