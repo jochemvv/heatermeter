@@ -10,14 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.sputnikdev.bluetooth.manager.BluetoothManager;
-import org.sputnikdev.bluetooth.manager.BluetoothSmartDeviceListener;
-import org.sputnikdev.bluetooth.manager.DeviceGovernor;
-import org.sputnikdev.bluetooth.manager.DiscoveredDevice;
-import org.sputnikdev.bluetooth.manager.GattCharacteristic;
-import org.sputnikdev.bluetooth.manager.GattService;
-import org.sputnikdev.bluetooth.manager.GenericBluetoothDeviceListener;
-import org.sputnikdev.bluetooth.manager.impl.BluetoothManagerBuilder;
+import tinyb.BluetoothDevice;
+import tinyb.BluetoothGattService;
+import tinyb.BluetoothManager;
 
 import java.util.List;
 import java.util.Set;
@@ -38,42 +33,31 @@ public class HeatermeterApplication {
 	}
 
 	public static void testBluetooth() throws InterruptedException {
-		BluetoothManager manager = new BluetoothManagerBuilder()
-				.withTinyBTransport(true)
-				.withIgnoreTransportInitErrors(true)
-				.withDiscovering(true)
-				.withCombinedAdapters(true)
-				.withCombinedDevices(false)
-				.build();
-
+		BluetoothManager manager = BluetoothManager.getBluetoothManager();
+		manager.startDiscovery();
 		while (true) {
-			Set<DiscoveredDevice> discoveredDevices = manager.getDiscoveredDevices();
-			logger.info("!!!######################### Discovered devices: {}", discoveredDevices.size());
-			discoveredDevices.forEach(device -> {
-				try {
-					checkDevice(manager, device);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			});
+			List<BluetoothDevice> list = manager.getDevices();
+			logger.info("!!!######################### Discovered devices: {}", list.size());
+			for (BluetoothDevice device : list) {
+				checkDevice(manager, device);
+			}
 			Thread.sleep(2000L);
 		}
+
 	}
 
-	public static void checkDevice(BluetoothManager bluetoothManager, DiscoveredDevice device) throws InterruptedException {
-		if (device.getDisplayName().toUpperCase().contains("UART")) {
-
-
+	public static void checkDevice(BluetoothManager bluetoothManager, BluetoothDevice device) throws InterruptedException {
+		if (device.getName().toUpperCase().contains("UART")) {
 			logger.info("!!!######################### UART DEVICE FOUND ######################################!!!");
-
-			DeviceGovernor deviceGovernor = bluetoothManager.getDeviceGovernor(device.getURL());
-			while (!deviceGovernor.isServicesResolved()) {
-				logger.info("!!!######################### waiting for services to be resolved {}", deviceGovernor.isConnected());
+			boolean connect = device.connect();
+			logger.info("!!!######################### UART DEVICE FOUND {}", connect);
+			while (!device.getServicesResolved()) {
+				logger.info("!!!######################### waiting for services to be resolved {}", device.getConnected());
 				Thread.sleep(1000L);
 			}
-			logger.info("!!!######################### resolved services {}", deviceGovernor.getResolvedServices().size());
-			for (GattService resolvedService : deviceGovernor.getResolvedServices()) {
-				logger.info("!!!######################### resolved service {}, {}", resolvedService.getCharacteristics(), resolvedService.getURL());
+			logger.info("!!!######################### resolved services {}", device.getServices().size());
+			for (BluetoothGattService resolvedService : device.getServices()) {
+				logger.info("!!!######################### resolved service {}, {}", resolvedService.getCharacteristics(), resolvedService.getUUID());
 			}
 		}
 	}
