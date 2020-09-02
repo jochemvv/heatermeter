@@ -38,6 +38,12 @@ public class HeaterMeterSystemController {
 
     public synchronized void handleActions() {
         logger.info("handling actions");
-        actions.forEach(Action::doActionBasedOnTarget);
+        actions.forEach(action -> {
+            try {
+                action.doActionBasedOnTarget();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
