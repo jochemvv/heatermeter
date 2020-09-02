@@ -12,7 +12,7 @@ public class BluetoothConfiguration {
 
     @Bean
     public BluetoothManager bluetoothManager() {
-        new BluetoothManagerBuilder().build(); // forces lib to be installed etc.
+        new BluetoothManagerBuilder().withDiscovering(false).withTinyBTransport(true).build(); // forces lib to be installed etc.
         return BluetoothManager.getBluetoothManager();
     }
 }
