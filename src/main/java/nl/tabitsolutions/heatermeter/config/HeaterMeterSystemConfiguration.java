@@ -53,7 +53,7 @@ public class HeaterMeterSystemConfiguration {
                                 intake.setToPosition(0);
                             } else {
                                 double position = (target.getTargetValue().getValue() / 200d) * 60d;
-                                logger.info("temp not too high adjusting intake acordingly{} ", (int) position);
+                                logger.info("temp not too high adjusting intake accordingly {} ", (int) position);
                                 intake.setToPosition((int) position);
                             }
 
