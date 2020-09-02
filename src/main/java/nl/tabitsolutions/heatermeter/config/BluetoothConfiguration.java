@@ -20,6 +20,12 @@ public class BluetoothConfiguration {
 
     @Bean
     public BluetoothDevice bluetoothDevice(BluetoothManager bluetoothManager) {
-        return new BluetoothDevice(bluetoothManager);
+        BluetoothDevice bluetoothDevice = new BluetoothDevice(bluetoothManager);
+        try {
+            bluetoothDevice.initBluetoothDevice();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return bluetoothDevice;
     }
 }
