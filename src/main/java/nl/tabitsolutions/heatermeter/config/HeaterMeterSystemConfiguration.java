@@ -41,7 +41,7 @@ public class HeaterMeterSystemConfiguration {
         Logger logger = LoggerFactory.getLogger(Action.class);
 
         return new Action("action1",
-                new TemperatureTarget(channel0, new SensorValue<>(30L, Unit.CELSIUS)),
+                new TemperatureTarget(channel0, new SensorValue<>(100L, Unit.CELSIUS)),
                         (target) -> {
                             if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
                                 logger.info("temp too low, turning on fan {}", target.getCurrentValue().getValue());
