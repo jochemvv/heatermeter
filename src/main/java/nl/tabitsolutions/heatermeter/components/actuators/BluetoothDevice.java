@@ -24,6 +24,7 @@ public class BluetoothDevice {
     public static final int MAX_TRIES = 30;
 
     private final BluetoothManager manager;
+    private volatile String address;
     private final AtomicReference<tinyb.BluetoothDevice> uartDevice = new AtomicReference<>();
     private final AtomicReference<BluetoothGattCharacteristic> gatt = new AtomicReference<>();
 
@@ -84,14 +85,41 @@ public class BluetoothDevice {
                         logger.info("!!!######################### Found write GATT!");
                         this.uartDevice.set(device);
                         this.gatt.set(c);
+                        address = device.getAddress();
                     });
         }
     }
 
-    public void sendMessage(String message) {
+    public synchronized void sendMessage(String message) {
         logger.info("sending message: {}, {} {}", message, this.gatt.get(), this.uartDevice.get());
         Optional.ofNullable(this.gatt.get())
-                .ifPresent(g -> g.writeValue(message.getBytes()));
+                .ifPresent(g -> {
+                    if (!g.getService().getDevice().getConnected()) {
+                        try {
+                            g.getService().getDevice().connect();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (g.getService().getDevice().getConnected()) {
+                        g.writeValue(message.getBytes());
+                    } else {
+                        logger.info("skipping sending message: {}, {} {}", message, this.gatt.get(), this.uartDevice.get());
+                        logger.info("reconnecting: {} {}", this.gatt.get(), this.uartDevice.get());
+                        reconnect();
+                    }
+                });
+    }
+
+    private synchronized void reconnect() {
+        this.uartDevice.set(null);
+        this.gatt.set(null);
+        try {
+            this.initBluetoothDevice();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
