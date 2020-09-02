@@ -3,6 +3,7 @@ package nl.tabitsolutions.heatermeter.components.actuators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.sputnikdev.bluetooth.manager.AdapterGovernor;
 import org.sputnikdev.bluetooth.manager.BluetoothManager;
 import org.sputnikdev.bluetooth.manager.BluetoothSmartDeviceListener;
 import org.sputnikdev.bluetooth.manager.CharacteristicGovernor;
@@ -56,16 +57,8 @@ public class Fan implements DeviceDiscoveryListener {
         logger.error("turning on");
         Optional.ofNullable(uartDevice.get())
                 .ifPresent(device ->  {
-                    logger.error("UART present");
-
-                    List<CharacteristicGovernor> characteristicGovernors = bluetoothManager.getDeviceGovernor(device.getURL(), true)
-                            .getCharacteristicGovernors();
-
-                    if(characteristicGovernors.isEmpty()) {
-                        logger.error("no characteristics");
-                    };
-
-                    characteristicGovernors
+                    bluetoothManager.getDeviceGovernor(device.getURL(), true)
+                            .getCharacteristicGovernors()
                             .stream()
                             .peek(characteristic -> {
                                 logger.info("characteristic {} {} {}", characteristic.getFlags(), characteristic.isWritable(), characteristic.getURL());
