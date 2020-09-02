@@ -98,6 +98,7 @@ public class BluetoothDevice {
                 .ifPresent(g -> {
                     if (!g.getService().getDevice().getConnected()) {
                         try {
+                            logger.info("reconnecting: {} {}", this.gatt.get(), this.uartDevice.get());
                             g.getService().getDevice().connect();
                         } catch (Exception e) {
                             e.printStackTrace();
