@@ -18,6 +18,7 @@ public class BluetoothConfiguration {
 
     @Bean
     public BluetoothManager bluetoothManager() {
+        loadTinyB();
         return BluetoothManager.getBluetoothManager();
     }
 
@@ -25,7 +26,6 @@ public class BluetoothConfiguration {
     public BluetoothDevice bluetoothDevice(BluetoothManager bluetoothManager) {
         BluetoothDevice bluetoothDevice = new BluetoothDevice(bluetoothManager);
         try {
-            loadTinyB();
             bluetoothDevice.initBluetoothDevice();
         } catch (InterruptedException e) {
             e.printStackTrace();
