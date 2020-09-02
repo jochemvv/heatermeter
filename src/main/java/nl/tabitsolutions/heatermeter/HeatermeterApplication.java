@@ -29,9 +29,11 @@ public class HeatermeterApplication {
 	private static final Logger logger = LoggerFactory.getLogger(HeatermeterApplication.class);
 
 	public static void main(String[] args) throws InterruptedException {
-		testBluetooth();
-//		Micronaut.build(args).eagerInitSingletons(true).mainClass(HeatermeterApplication.class).start();
-//		SpringApplication.run(HeatermeterApplication.class, args);
+		if (args.length > 0 && "testbt".equals(args[0])) {
+			testBluetooth();
+		} else {
+			Micronaut.build(args).eagerInitSingletons(true).mainClass(HeatermeterApplication.class).start();
+		}
 	}
 
 	public static void testBluetooth() throws InterruptedException {
