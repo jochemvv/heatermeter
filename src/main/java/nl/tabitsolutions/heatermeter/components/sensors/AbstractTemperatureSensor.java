@@ -5,7 +5,7 @@ import nl.tabitsolutions.heatermeter.model.SteinhartHartEquationCalibrationProfi
 
 public abstract class AbstractTemperatureSensor extends Sensor<Long> {
 
-    private SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile;
+    private volatile SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile;
 
     public AbstractTemperatureSensor(String identifier,
                                      SteinhartHartEquationCalibrationProfile steinhartHartEquationCalibrationProfile) {
