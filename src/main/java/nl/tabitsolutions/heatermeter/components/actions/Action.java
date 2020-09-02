@@ -1,10 +1,13 @@
 package nl.tabitsolutions.heatermeter.components.actions;
 
 import nl.tabitsolutions.heatermeter.components.targets.TemperatureTarget;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
 public class Action {
+
+
 
     private final String identifier;
     private final TemperatureTarget target;

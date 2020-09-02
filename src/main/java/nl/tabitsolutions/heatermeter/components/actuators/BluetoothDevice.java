@@ -16,8 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-@Component
-class BluetoothDevice {
+public class BluetoothDevice {
 
     private static final Logger logger = LoggerFactory.getLogger(HeatermeterApplication.class);
 

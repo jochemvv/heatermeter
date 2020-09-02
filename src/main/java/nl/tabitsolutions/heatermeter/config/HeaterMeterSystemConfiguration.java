@@ -3,6 +3,7 @@ package nl.tabitsolutions.heatermeter.config;
 import nl.tabitsolutions.heatermeter.components.actions.Action;
 import nl.tabitsolutions.heatermeter.components.actuators.AirIntake;
 import nl.tabitsolutions.heatermeter.components.actuators.Fan;
+import nl.tabitsolutions.heatermeter.components.sensors.AbstractTemperatureSensor;
 import nl.tabitsolutions.heatermeter.components.sensors.PiTemperatureSensor;
 import nl.tabitsolutions.heatermeter.components.system.HeaterMeterSystemController;
 import nl.tabitsolutions.heatermeter.components.targets.TemperatureTarget;
@@ -14,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import javax.inject.Named;
+import javax.inject.Qualifier;
 import java.util.List;
 
 @Configuration
@@ -31,7 +34,7 @@ public class HeaterMeterSystemConfiguration {
     }
 
     @Bean("action1")
-    public Action action1(PiTemperatureSensor channel0,
+    public Action action1(@Named("channel0") AbstractTemperatureSensor channel0,
                           Fan fan,
                           AirIntake intake) {
 
@@ -41,19 +44,19 @@ public class HeaterMeterSystemConfiguration {
                 new TemperatureTarget(channel0, new SensorValue<>(30L, Unit.CELSIUS)),
                         (target) -> {
                             if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
-                                logger.info("temp too low, turning on fan");
+                                logger.info("temp too low, turning on fan {}", target.getCurrentValue().getValue());
                                 fan.turnOn();
                             } else {
-                                logger.info("temp not below target turning off fan");
+                                logger.info("temp not below target turning off fan {}", target.getCurrentValue().getValue());
                                 fan.turnOff();
                             }
 
                             if (target.getCurrentValue().getValue() > target.getTargetValue().getValue() + 10) {
-                                logger.info("temp way too high closing intake");
+                                logger.info("temp way too high closing intake {}", target.getCurrentValue().getValue());
                                 intake.setToPosition(0);
                             } else {
-                                double position = (target.getTargetValue().getValue() / 200d) * 60d;
-                                logger.info("temp not too high adjusting intake accordingly {} ", (int) position);
+                                double position = Math.max((target.getTargetValue().getValue() / 200d) * 60d, 0);
+                                logger.info("temp not too high adjusting intake accordingly {}, {} ", (int) position, target.getCurrentValue().getValue());
                                 intake.setToPosition((int) position);
                             }
 

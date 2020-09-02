@@ -2,6 +2,7 @@ package nl.tabitsolutions.heatermeter;
 
 import io.micronaut.runtime.Micronaut;
 import nl.tabitsolutions.heatermeter.config.CalibrationConfiguration;
+import nl.tabitsolutions.heatermeter.config.HeaterMeterSystemConfiguration;
 import nl.tabitsolutions.heatermeter.config.I2CConfiguration;
 import nl.tabitsolutions.heatermeter.config.TestConfiguration;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @SpringBootApplication
-@Import({CalibrationConfiguration.class, I2CConfiguration.class, TestConfiguration.class})
+@Import({CalibrationConfiguration.class, I2CConfiguration.class, TestConfiguration.class, HeaterMeterSystemConfiguration.class})
 @EnableScheduling
 public class HeatermeterApplication {
 
