@@ -62,6 +62,17 @@ public class HeatermeterApplication {
 				logger.info("!!!######################### resolved service {}, {}",
 						resolvedService.getCharacteristics().stream().flatMap(c -> Arrays.stream(c.getFlags())).collect(Collectors.joining()),
 						resolvedService.getUUID());
+
+				resolvedService.getCharacteristics().stream()
+						.filter(c -> Arrays.stream(c.getFlags()).anyMatch(flag -> flag != null && flag.contains("write")))
+						.findFirst()
+						.ifPresent(c -> {
+							logger.info("!!!######################### Sending fan on!");
+							c.writeValue("fan on".getBytes());
+						});
+
+
+
 			}
 		}
 	}
