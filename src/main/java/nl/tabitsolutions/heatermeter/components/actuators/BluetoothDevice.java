@@ -85,6 +85,7 @@ public class BluetoothDevice {
     }
 
     public void sendMessage(String message) {
+        logger.info("sending message: {}, {} {}", message, this.gatt.get(), this.uartDevice.get());
         Optional.ofNullable(this.gatt.get())
                 .ifPresent(g -> g.writeValue(message.getBytes()));
     }
