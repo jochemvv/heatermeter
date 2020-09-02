@@ -36,18 +36,17 @@ class BluetoothDevice {
     public void initBluetoothDevice() throws InterruptedException {
         manager.startDiscovery();
         int tries = 0;
-        while (tries < MAX_TRIES) {
+        while (tries < MAX_TRIES && uartDevice.get() == null) {
             List<tinyb.BluetoothDevice> devices = manager.getDevices();
             logger.debug("!!!######################### Discovered devices: {}", devices.size());
-            while (uartDevice.get() == null) {
-                devices.forEach(device -> {
-                    try {
-                        checkDevice(manager, device);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+            devices.forEach(device -> {
+                try {
+                    checkDevice(manager, device);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+
             Thread.sleep(2000L);
             tries++;
         }
