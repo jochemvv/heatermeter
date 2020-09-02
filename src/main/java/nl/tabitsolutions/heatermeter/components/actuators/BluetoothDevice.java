@@ -53,6 +53,8 @@ public class BluetoothDevice {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            manager.stopDiscovery();
         }
     }
 
@@ -99,6 +101,7 @@ public class BluetoothDevice {
                             g.getService().getDevice().connect();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            return;
                         }
                     }
 
