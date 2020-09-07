@@ -41,20 +41,22 @@ public class HeaterMeterSystemConfiguration {
         return new Action(channel0.getIdentifier(),
                 new TemperatureTarget(channel0, new SensorValue<>(100L, Unit.CELSIUS)),
                 (target) -> {
-                    if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
-                        logger.info("temp too low, turning on fan {}", target.getCurrentValue().getValue());
+                    Long currentValue = target.getCurrentValue().getValue();
+                    Long targetValue = target.getTargetValue().getValue();
+                    if (currentValue < targetValue) {
+                        logger.info("{} temp too low, turning on fan {}", channel0.getIdentifier(), currentValue);
                         fan.turnOn();
                     } else {
-                        logger.info("temp not below target turning off fan {}", target.getCurrentValue().getValue());
+                        logger.info("{} temp not below target turning off fan {}", channel0.getIdentifier(), currentValue);
                         fan.turnOff();
                     }
 
-                    if (target.getCurrentValue().getValue() > target.getTargetValue().getValue() + 10) {
-                        logger.info("temp way too high closing intake {}", target.getCurrentValue().getValue());
+                    if (currentValue > targetValue + 10) {
+                        logger.info("{} temp way too high closing intake {}", channel0.getIdentifier(), currentValue);
                         intake.setToPosition(0);
                     } else {
-                        double position = Math.max((target.getTargetValue().getValue() / 200d) * 60d, 0);
-                        logger.info("temp not too high adjusting intake accordingly {}, {} ", (int) position, target.getCurrentValue().getValue());
+                        double position = Math.max((targetValue / 200d) * 60d, 0);
+                        logger.info("{} temp not too high adjusting intake accordingly {}, {} ", channel0.getIdentifier(), (int) position, currentValue);
                         intake.setToPosition((int) position);
                     }
 
