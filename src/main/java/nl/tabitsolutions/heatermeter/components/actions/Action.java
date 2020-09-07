@@ -7,8 +7,6 @@ import java.util.function.Consumer;
 
 public class Action {
 
-
-
     private final String identifier;
     private final TemperatureTarget target;
     private final Consumer<TemperatureTarget> action;
@@ -29,4 +27,7 @@ public class Action {
         action.accept(target);
     }
 
+    public TemperatureTarget getTarget() {
+        return target;
+    }
 }

@@ -59,18 +59,6 @@ public class TemperatureSensorsService {
         return sensor.getValue();
     }
 
-    public Map<String, SensorInfo> getSensorInfo() {
-        return this.sensors.entrySet().stream()
-                .collect(HashMap::new, (m, v) -> m.put(v.getKey(),
-                            new SensorInfo(v.getKey(),
-                                    this.lastReadings.containsKey(v.getKey()) ? this.lastReadings.get(v.getKey()).getValue() : null,
-                                    this.lastReadings.containsKey(v.getKey()) ? this.lastReadings.get(v.getKey()).getUnit().toString() : null,
-                                    v.getValue().isEnabled() ? v.getValue().getSteinhartHartEquationCalibrationProfile().getIdentifier() : "Disabled"
-                            )
-                        ),
-                 HashMap::putAll);
-    }
-
     @Scheduled(fixedDelay = 5000)
     public void readSensors() {
         logger.debug("registered sensors: " + sensors);

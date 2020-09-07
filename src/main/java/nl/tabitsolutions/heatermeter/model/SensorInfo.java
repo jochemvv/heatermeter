@@ -4,6 +4,7 @@ public class SensorInfo {
 
     private String identifier;
     private Object reading;
+    private Object target;
     private String unit;
     private String mode;
 
@@ -11,9 +12,14 @@ public class SensorInfo {
 
     }
 
-    public SensorInfo(String identifier, Object reading, String unit, String mode) {
+    public SensorInfo(String identifier,
+                      Object reading,
+                      Object target,
+                      String unit,
+                      String mode) {
         this.identifier = identifier;
         this.reading = reading;
+        this.target = target;
         this.unit = unit;
         this.mode = mode;
     }
@@ -32,6 +38,14 @@ public class SensorInfo {
 
     public void setReading(Object reading) {
         this.reading = reading;
+    }
+
+    public Object getTarget() {
+        return target;
+    }
+
+    public void setTarget(Object target) {
+        this.target = target;
     }
 
     public String getUnit() {

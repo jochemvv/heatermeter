@@ -13,13 +13,13 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import nl.tabitsolutions.heatermeter.components.sensors.TemperatureSensorsService;
-import nl.tabitsolutions.heatermeter.model.SensorInfo;
+import nl.tabitsolutions.heatermeter.components.system.HeaterMeterSystemController;
+import nl.tabitsolutions.heatermeter.model.SensorValue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -36,9 +36,12 @@ import static java.util.stream.Collectors.toList;
 @Hidden
 public class MainViewController {
 
+    private final HeaterMeterSystemController systemController;
     private final TemperatureSensorsService sensorsService;
 
-    public MainViewController(TemperatureSensorsService sensorsService) {
+    public MainViewController(HeaterMeterSystemController systemController,
+                              TemperatureSensorsService sensorsService) {
+        this.systemController = systemController;
         this.sensorsService = sensorsService;
     }
 
@@ -46,7 +49,7 @@ public class MainViewController {
     @Get("/")
     public HttpResponse index() {
         return HttpResponse.ok(CollectionUtils.mapOf(
-                "sensorsView", new SensorsView(new ArrayList<>(new TreeMap<>(sensorsService.getSensorInfo()).values())),
+                "sensorsView", new SensorsView(new ArrayList<>(new TreeMap<>(systemController.getSensorInfo()).values())),
                         "readings", getReadings()
                     )
         );
@@ -64,6 +67,9 @@ public class MainViewController {
         update.getSensors()
                 .forEach(sensor -> {
                     sensorsService.updateSensor(sensor.getIdentifier(), !Objects.equals("Disabled", sensor.getMode()), sensor.getMode());
+                    if (!Objects.equals("Disabled", sensor.getMode())) {
+                        systemController.updateTarget(sensor.getIdentifier(), Long.valueOf((String) sensor.getTarget()));
+                    }
                 });
 
 

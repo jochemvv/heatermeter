@@ -24,6 +24,10 @@ public class TemperatureTarget {
         return targetTemperature;
     }
 
+    public AbstractTemperatureSensor getSensor() {
+        return sensor;
+    }
+
     public void setTargetValue(SensorValue<Long> value) {
         this.targetTemperature = value;
     }
