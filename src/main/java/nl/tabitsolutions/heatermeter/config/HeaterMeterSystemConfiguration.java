@@ -74,7 +74,7 @@ public class HeaterMeterSystemConfiguration {
                     if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
                         logger.info("{} temp too low {}", channel1.getIdentifier(), target.getCurrentValue().getValue());
                     } else if (target.getCurrentValue().getValue() > target.getTargetValue().getValue()) {
-                        logger.info("{} temp higer than target {}", channel1.getIdentifier(), target.getCurrentValue().getValue());
+                        logger.info("{} temp higher than target {}", channel1.getIdentifier(), target.getCurrentValue().getValue());
                     } else {
                         logger.info("{} temp on target {}", channel1.getIdentifier(), target.getCurrentValue().getValue());
                     }
@@ -92,7 +92,7 @@ public class HeaterMeterSystemConfiguration {
                     if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
                         logger.info("{} temp too low {}", channel2.getIdentifier(), target.getCurrentValue().getValue());
                     } else if (target.getCurrentValue().getValue() > target.getTargetValue().getValue()) {
-                        logger.info("{} temp higer than target {}", channel2.getIdentifier(), target.getCurrentValue().getValue());
+                        logger.info("{} temp higher than target {}", channel2.getIdentifier(), target.getCurrentValue().getValue());
                     } else {
                         logger.info("{} temp on target {}", channel2.getIdentifier(), target.getCurrentValue().getValue());
                     }
@@ -110,7 +110,7 @@ public class HeaterMeterSystemConfiguration {
                     if (target.getCurrentValue().getValue() < target.getTargetValue().getValue()) {
                         logger.info("{} temp too low {}", channel3.getIdentifier(), target.getCurrentValue().getValue());
                     } else if (target.getCurrentValue().getValue() > target.getTargetValue().getValue()) {
-                        logger.info("{} temp higer than target {}", channel3.getIdentifier(), target.getCurrentValue().getValue());
+                        logger.info("{} temp higher than target {}", channel3.getIdentifier(), target.getCurrentValue().getValue());
                     } else {
                         logger.info("{} temp on target {}", channel3.getIdentifier(), target.getCurrentValue().getValue());
                     }
